@@ -34,7 +34,7 @@
             this.configMapBtn = new System.Windows.Forms.Button();
             this.mainBtn = new System.Windows.Forms.Button();
             this.logoPicBox = new System.Windows.Forms.PictureBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.childFormPanel = new System.Windows.Forms.Panel();
             this.menuPanel.SuspendLayout();
             this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).BeginInit();
@@ -80,6 +80,7 @@
             this.configPlayerBtn.Text = "           Configurar ser";
             this.configPlayerBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.configPlayerBtn.UseVisualStyleBackColor = true;
+            this.configPlayerBtn.Click += new System.EventHandler(this.configPlayerBtn_Click);
             // 
             // configMapBtn
             // 
@@ -98,6 +99,7 @@
             this.configMapBtn.Text = "           Configurar mapa";
             this.configMapBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.configMapBtn.UseVisualStyleBackColor = true;
+            this.configMapBtn.Click += new System.EventHandler(this.configMapBtn_Click);
             // 
             // mainBtn
             // 
@@ -116,6 +118,7 @@
             this.mainBtn.Text = "           Principal";
             this.mainBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.mainBtn.UseVisualStyleBackColor = true;
+            this.mainBtn.Click += new System.EventHandler(this.mainBtn_Click);
             // 
             // logoPicBox
             // 
@@ -128,21 +131,21 @@
             this.logoPicBox.TabIndex = 0;
             this.logoPicBox.TabStop = false;
             // 
-            // panel1
+            // childFormPanel
             // 
-            this.panel1.BackColor = System.Drawing.Color.Gainsboro;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(316, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1010, 777);
-            this.panel1.TabIndex = 1;
+            this.childFormPanel.BackColor = System.Drawing.Color.Gainsboro;
+            this.childFormPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.childFormPanel.Location = new System.Drawing.Point(316, 0);
+            this.childFormPanel.Name = "childFormPanel";
+            this.childFormPanel.Size = new System.Drawing.Size(1010, 777);
+            this.childFormPanel.TabIndex = 1;
             // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1326, 777);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.childFormPanel);
             this.Controls.Add(this.menuPanel);
             this.MaximizeBox = false;
             this.Name = "mainWindow";
@@ -163,7 +166,7 @@
         private System.Windows.Forms.PictureBox logoPicBox;
         private System.Windows.Forms.Button configPlayerBtn;
         private System.Windows.Forms.Button configMapBtn;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel childFormPanel;
     }
 }
 
