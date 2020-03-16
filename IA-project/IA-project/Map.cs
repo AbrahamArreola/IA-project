@@ -120,21 +120,20 @@ namespace IA_project
             }
 
             imagesDisplayer.SmallImageList = images;
-            imagesDisplayer.Items.Add("terreno 1", 0);
-            imagesDisplayer.Items.Add("terreno 2", 1);
-            imagesDisplayer.Items.Add("terreno 3", 2);
-            imagesDisplayer.Items.Add("terreno 4", 3);
-            imagesDisplayer.Items.Add("terreno 5", 4);
-            imagesDisplayer.Items.Add("terreno 6", 5);
-            imagesDisplayer.Items.Add("terreno 7", 6);
-            imagesDisplayer.Items.Add("terreno 8", 7);
-            imagesDisplayer.Items.Add("terreno 9", 8);
-            imagesDisplayer.Items.Add("terreno 10", 9);
+            for(int i = 1; i < 11; i++)
+            {
+                imagesDisplayer.Items.Add(string.Format("terreno {0}", i), i - 1);
+            }
 
             //Activando y desactivando los controles necesarios
             loadMapGb.Enabled = false;
             configTerrainGb.Enabled = true;
-            prevBtn.Enabled = false;
+            loadBtn.Enabled = false;
+            if (terrainValues.Count == 1)
+            {
+                loadBtn.Enabled = true;
+                nextBtn.Enabled = false;
+            }
 
             //Cargando el número de terrenos
             terrainLabel.Text = String.Format(terrainLblAux, currentIndex, terrainValues.Count);
@@ -149,11 +148,8 @@ namespace IA_project
             terrain.Value = terrainValues[currentIndex - 1];
             terrain.Name = nameTxt.Text;
             terrain.Image = imagesDisplayer.SmallImageList.Images[imagesDisplayer.SelectedItems[0].ImageIndex];
-
-            if (terrainList.Exists(ind => ind.Value == terrain.Value))
-                terrainList[terrainList.FindIndex(ind => ind.Value == terrain.Value)] = terrain;
-            else
-                terrainList.Add(terrain);
+            imagesDisplayer.Items.Remove(imagesDisplayer.SelectedItems[0]);
+            terrainList.Add(terrain);
         }
         #endregion
 
@@ -173,62 +169,51 @@ namespace IA_project
         //Evento del boton siguiente
         private void nextBtn_Click(object sender, EventArgs e)
         {
-            if (nameTxt.Text == "")
-                errorProvider1.SetError(nameTxt, "Proporcione un nombre al terreno");
-
-            else if (imagesDisplayer.SelectedItems.Count == 0)
+            if (string.IsNullOrEmpty(nameTxt.Text) || imagesDisplayer.SelectedItems.Count == 0)
             {
                 errorProvider1.Clear();
-                errorProvider1.SetError(imagesDisplayer, "Seleccione una imagen para el terreno");
+                if (string.IsNullOrEmpty(nameTxt.Text))
+                    errorProvider1.SetError(nameTxt, "Proporcione un nombre al terreno");
+                if (imagesDisplayer.SelectedItems.Count == 0)
+                    errorProvider1.SetError(imagesDisplayer, "Seleccione una imagen para el terreno");
             }
             else
             {
                 errorProvider1.Clear();
+                if (currentIndex == terrainValues.Count - 1)
+                {
+                    nextBtn.Enabled = false;
+                    loadBtn.Enabled = true;
+                }
+                retrieveTerrainData();
                 currentIndex++;
-                if (currentIndex == terrainValues.Count)
-                {
-                    nextBtn.Text = "Cargar";
-                }
-                if (currentIndex == terrainValues.Count + 1)
-                {
-                    mainWindow main = Owner as mainWindow;
-                    main.terrains = terrainList;
-                    Close();
-                    return;
-                }
-                if (currentIndex > 1) prevBtn.Enabled = true;
                 terrainLabel.Text = String.Format(terrainLblAux, currentIndex, terrainValues.Count);
                 valueTxt.Text = terrainValues[currentIndex - 1].ToString();
-                retrieveTerrainData();
                 nameTxt.Clear();
                 imagesDisplayer.SelectedItems.Clear();
+                nameTxt.Focus();
             }
         }
 
         //Evento del boton anterior
-        private void prevBtn_Click(object sender, EventArgs e)
+        private void loadBtn_Click(object sender, EventArgs e)
         {
-            if (nameTxt.Text == "")
-                errorProvider1.SetError(nameTxt, "Proporcione un nombre al terreno");
-
-            else if (imagesDisplayer.SelectedItems.Count == 0)
+            if(string.IsNullOrEmpty(nameTxt.Text) || imagesDisplayer.SelectedItems.Count == 0)
             {
                 errorProvider1.Clear();
-                errorProvider1.SetError(imagesDisplayer, "Seleccione una imagen para el terreno");
+                if (string.IsNullOrEmpty(nameTxt.Text))
+                    errorProvider1.SetError(nameTxt, "Proporcione un nombre al terreno");
+                if (imagesDisplayer.SelectedItems.Count == 0)
+                    errorProvider1.SetError(imagesDisplayer, "Seleccione una imagen para el terreno");
             }
             else
             {
                 errorProvider1.Clear();
-                currentIndex--;
-                if (currentIndex < 2) prevBtn.Enabled = false;
-                if (currentIndex == terrainValues.Count - 1) nextBtn.Text = "Siguiente";
-                terrainLabel.Text = String.Format(terrainLblAux, currentIndex, terrainValues.Count);
-                valueTxt.Text = terrainValues[currentIndex - 1].ToString();
                 retrieveTerrainData();
-                nameTxt.Clear();
-                imagesDisplayer.SelectedItems.Clear();
+                mainWindow main = Owner as mainWindow;
+                main.terrainsDictionary = terrainList.ToDictionary(x => x.Value, x => x);
+                Close();
             }
-            
         }
         #endregion
     }

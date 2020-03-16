@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace IA_project
 {
     public partial class mainWindow : Form
     {
         //private Form activeForm = null;
-        public List<Terrain> terrains = null;
+        public Dictionary<int, Terrain> terrainsDictionary = null;
 
         public mainWindow()
         {
@@ -53,10 +54,17 @@ namespace IA_project
 
         private void configPlayerBtn_Click(object sender, EventArgs e)
         {
-            if(terrains == null)
+            if(terrainsDictionary == null)
             {
                 MessageBox.Show(this, "Primero configure los terrenos", "Error", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                foreach(var item in terrainsDictionary)
+                {
+                    Debug.WriteLine(item.Key + ":" + item.Value.Name);
+                }
             }
         }
         #endregion

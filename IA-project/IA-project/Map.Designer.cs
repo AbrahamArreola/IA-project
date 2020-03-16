@@ -34,7 +34,7 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.configTerrainGb = new System.Windows.Forms.GroupBox();
             this.nextBtn = new System.Windows.Forms.Button();
-            this.prevBtn = new System.Windows.Forms.Button();
+            this.loadBtn = new System.Windows.Forms.Button();
             this.imagesDisplayer = new System.Windows.Forms.ListView();
             this.nameTxt = new System.Windows.Forms.TextBox();
             this.valueTxt = new System.Windows.Forms.TextBox();
@@ -79,7 +79,7 @@
             // configTerrainGb
             // 
             this.configTerrainGb.Controls.Add(this.nextBtn);
-            this.configTerrainGb.Controls.Add(this.prevBtn);
+            this.configTerrainGb.Controls.Add(this.loadBtn);
             this.configTerrainGb.Controls.Add(this.imagesDisplayer);
             this.configTerrainGb.Controls.Add(this.nameTxt);
             this.configTerrainGb.Controls.Add(this.valueTxt);
@@ -98,7 +98,7 @@
             // 
             // nextBtn
             // 
-            this.nextBtn.Location = new System.Drawing.Point(207, 325);
+            this.nextBtn.Location = new System.Drawing.Point(64, 325);
             this.nextBtn.Name = "nextBtn";
             this.nextBtn.Size = new System.Drawing.Size(121, 46);
             this.nextBtn.TabIndex = 8;
@@ -106,15 +106,15 @@
             this.nextBtn.UseVisualStyleBackColor = true;
             this.nextBtn.Click += new System.EventHandler(this.nextBtn_Click);
             // 
-            // prevBtn
+            // loadBtn
             // 
-            this.prevBtn.Location = new System.Drawing.Point(64, 325);
-            this.prevBtn.Name = "prevBtn";
-            this.prevBtn.Size = new System.Drawing.Size(121, 46);
-            this.prevBtn.TabIndex = 7;
-            this.prevBtn.Text = "Anterior";
-            this.prevBtn.UseVisualStyleBackColor = true;
-            this.prevBtn.Click += new System.EventHandler(this.prevBtn_Click);
+            this.loadBtn.Location = new System.Drawing.Point(208, 325);
+            this.loadBtn.Name = "loadBtn";
+            this.loadBtn.Size = new System.Drawing.Size(121, 46);
+            this.loadBtn.TabIndex = 7;
+            this.loadBtn.Text = "Cargar";
+            this.loadBtn.UseVisualStyleBackColor = true;
+            this.loadBtn.Click += new System.EventHandler(this.loadBtn_Click);
             // 
             // imagesDisplayer
             // 
@@ -178,7 +178,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(752, 643);
             this.Controls.Add(this.configTerrainGb);
             this.Controls.Add(this.loadMapGb);
@@ -207,7 +207,7 @@
         private System.Windows.Forms.TextBox valueTxt;
         private System.Windows.Forms.ListView imagesDisplayer;
         private System.Windows.Forms.Button nextBtn;
-        private System.Windows.Forms.Button prevBtn;
+        private System.Windows.Forms.Button loadBtn;
         private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }
