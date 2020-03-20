@@ -118,6 +118,7 @@
             // 
             // imagesDisplayer
             // 
+            this.imagesDisplayer.HideSelection = false;
             this.imagesDisplayer.Location = new System.Drawing.Point(378, 105);
             this.imagesDisplayer.MultiSelect = false;
             this.imagesDisplayer.Name = "imagesDisplayer";

@@ -65,6 +65,9 @@ namespace IA_project
                 {
                     Debug.WriteLine(item.Key + ":" + item.Value.Name);
                 }
+                Character confiCharacterWindow = new Character(terrainsDictionary);
+                AddOwnedForm(confiCharacterWindow);
+                confiCharacterWindow.ShowDialog();
             }
         }
         #endregion
