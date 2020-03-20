@@ -13,6 +13,14 @@ namespace IA_project
         private string name;
         private Image image;
 
+        public Terrain() {}
+        public Terrain(Terrain terrain)
+        {
+            value = terrain.value;
+            name = terrain.name;
+            image = terrain.image;
+        }
+
         public int Value { get => value; set => this.value = value; }
         public string Name { get => name; set => name = value; }
         public Image Image { get => image; set => image = value; }
