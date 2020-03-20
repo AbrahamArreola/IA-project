@@ -63,6 +63,7 @@ namespace IA_project
              }
 
             //Cargando el número de terrenos
+            // continuar
             terrainLabel.Text = terrainsDictionary.Count.ToString();
         }
     }
