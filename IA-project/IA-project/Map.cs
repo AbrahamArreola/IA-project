@@ -215,6 +215,7 @@ namespace IA_project
                 mainWindow main = Owner as mainWindow;
                 main.terrainsDictionary = terrainList.ToDictionary(x => x.Value, x => x);
                 main.fileRoute = fileRoute;
+                main.resetMap();
                 main.loadMap();
                 Close();
             }

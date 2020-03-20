@@ -12,6 +12,7 @@ namespace IA_project
         private int value;
         private string name;
         private Image image;
+        private int visitNumber;
 
         public Terrain() {}
         public Terrain(Terrain terrain)
@@ -19,10 +20,12 @@ namespace IA_project
             value = terrain.value;
             name = terrain.name;
             image = terrain.image;
+            visitNumber = 0;
         }
 
         public int Value { get => value; set => this.value = value; }
         public string Name { get => name; set => name = value; }
         public Image Image { get => image; set => image = value; }
+        public int VisitNumber { get => visitNumber; set => visitNumber = value; }
     }
 }

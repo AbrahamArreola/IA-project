@@ -22,10 +22,13 @@ namespace IA_project
         public Dictionary<int, Terrain> terrainsDictionary = null;
         public string fileRoute;
         private Panel startPanel = null;
-        private int[] startCoord = new int[] { 0, 0 };
         private Panel goalPanel = null;
-        private int[] goalCoord = new int[] { 0, 0 };
         private Terrain[,] matrixPosition;
+
+        //variables de control de coordenadas [0] = fila, [1] = columna
+        private int[] startCoord = new int[] { 0, 0 };
+        private int[] goalCoord = new int[] { 0, 0 };
+        private int[] currentCoord;
 
         //Variables bandera
         bool gameStarted = false;
@@ -144,6 +147,12 @@ namespace IA_project
 
         public void resetMap()
         {
+            startPanel = null;
+            goalPanel = null;
+            startCoord = new int[] { 0, 0 };
+            goalCoord = new int[] { 0, 0 };
+            initialStateSet = false;
+            finalStateSet = false;
             for (int i = 1; i < map.RowCount; i++)
             {
                 for (int j = 1; j < map.ColumnCount; j++)
@@ -159,7 +168,8 @@ namespace IA_project
             int row = 1;
             string[] lines = File.ReadAllLines(fileRoute);
 
-            matrixPosition = new Terrain[lines.Length, lines[0].Length];
+            //lines.lenght = number of rows, lines[0].split(',').lenght = number of columns
+            matrixPosition = new Terrain[lines.Length, lines[0].Split(',').Length];
 
             map.SuspendLayout();
             foreach (string line in lines)
@@ -256,8 +266,13 @@ namespace IA_project
                         startPanel.Controls[0].Text = "";
                         startPanel.BackgroundImage = 
                             setOpacity(matrixPosition[startCoord[0], startCoord[1]].Image, Convert.ToSingle(0.6));
+
+                        startPanel.Controls[1].Text = "";
+                        matrixPosition[startCoord[0], startCoord[1]].VisitNumber--;
                     }
                     panel.Controls[0].Text = "Inicio";
+                    panel.Controls[1].Text = 
+                        (++matrixPosition[coords[0] - 1, coords[1] - 1].VisitNumber).ToString() + ",";
                     drawPlayer(panel, playerImage.Image);
                     startPanel = panel;
                     startCoord[0] = coords[0] - 1;
@@ -290,11 +305,10 @@ namespace IA_project
         }
         #endregion
 
-        #region Events
+        #region configEvents
         //Evento de botón "configurar terrenos" en menú lateral
         private void configMapBtn_Click(object sender, EventArgs e)
         {
-            resetMap();
             Map configMapWindow = new Map();
             AddOwnedForm(configMapWindow);
             configMapWindow.ShowDialog();
@@ -343,7 +357,13 @@ namespace IA_project
         //Evento de botón "Jugar" en ventana principal
         private void playBtn_Click(object sender, EventArgs e)
         {
-            gameStarted = !gameStarted;
+            gameStarted = true;
+            playBtn.Enabled = false;
+            configMapBtn.Enabled = false;
+            configPlayerBtn.Enabled = false;
+            howToPlayBtn.Enabled = false;
+            Focus();
+            currentCoord = startCoord;
         }
 
         //Evento de cambio de combobox para seleccionar jugador
@@ -355,6 +375,71 @@ namespace IA_project
             }
         }
 
+        #endregion
+
+        #region movePlayerEvents
+        private void goalReached()
+        {
+            if(currentCoord.SequenceEqual(goalCoord))
+            {
+                MessageBox.Show(this, "Meta alcanzada", "Gameover",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                gameStarted = false;
+                configMapBtn.Enabled = true;
+                configPlayerBtn.Enabled = true;
+                howToPlayBtn.Enabled = true;
+                resetMap();
+                loadMap();
+            }
+        }
+
+        private void movePlayer(Keys key)
+        {
+            map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1).BackgroundImage =
+                        setOpacity(matrixPosition[currentCoord[0], currentCoord[1]].Image, Convert.ToSingle(0.6));
+
+            switch (key)
+            {
+                case Keys.Up:    currentCoord[0]--; break;
+                case Keys.Down:  currentCoord[0]++; break;
+                case Keys.Left:  currentCoord[1]--; break;
+                case Keys.Right: currentCoord[1]++; break;
+            }
+
+            drawPlayer(((Panel)map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1)),
+                            playerImage.Image);
+
+            map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1).Controls[1].Text +=
+                string.Format("{0},", ++matrixPosition[currentCoord[0], currentCoord[1]].VisitNumber);
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (gameStarted)
+            {
+                if (keyData == Keys.Up)
+                {
+                    if(currentCoord[0] > 0) movePlayer(keyData);
+                }
+
+                else if (keyData == Keys.Down)
+                {
+                    if (currentCoord[0] < matrixPosition.GetLength(0) - 1) movePlayer(keyData);
+                }
+
+                else if (keyData == Keys.Left)
+                {
+                    if (currentCoord[1] > 0) movePlayer(keyData);
+                }
+
+                else if (keyData == Keys.Right)
+                {
+                    if (currentCoord[1] < matrixPosition.GetLength(1) - 1) movePlayer(keyData);
+                }
+                goalReached();
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
         #endregion
     }
 }

@@ -29,24 +29,24 @@
         private void InitializeComponent()
         {
             this.menuPanel = new System.Windows.Forms.Panel();
-            this.buttonPanel = new System.Windows.Forms.Panel();
-            this.childFormPanel = new System.Windows.Forms.Panel();
-            this.playBtn = new System.Windows.Forms.Button();
-            this.playerGroupB = new System.Windows.Forms.GroupBox();
-            this.playerSelector = new System.Windows.Forms.ComboBox();
-            this.map = new System.Windows.Forms.TableLayoutPanel();
-            this.playerImage = new System.Windows.Forms.PictureBox();
             this.howToPlayBtn = new System.Windows.Forms.Button();
+            this.buttonPanel = new System.Windows.Forms.Panel();
             this.configPlayerBtn = new System.Windows.Forms.Button();
             this.configMapBtn = new System.Windows.Forms.Button();
             this.mainBtn = new System.Windows.Forms.Button();
             this.logoPicBox = new System.Windows.Forms.PictureBox();
+            this.childFormPanel = new System.Windows.Forms.Panel();
+            this.playBtn = new System.Windows.Forms.Button();
+            this.playerGroupB = new System.Windows.Forms.GroupBox();
+            this.playerSelector = new System.Windows.Forms.ComboBox();
+            this.playerImage = new System.Windows.Forms.PictureBox();
+            this.map = new System.Windows.Forms.TableLayoutPanel();
             this.menuPanel.SuspendLayout();
             this.buttonPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).BeginInit();
             this.childFormPanel.SuspendLayout();
             this.playerGroupB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.playerImage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuPanel
@@ -60,92 +60,6 @@
             this.menuPanel.Name = "menuPanel";
             this.menuPanel.Size = new System.Drawing.Size(316, 797);
             this.menuPanel.TabIndex = 0;
-            // 
-            // buttonPanel
-            // 
-            this.buttonPanel.Controls.Add(this.configPlayerBtn);
-            this.buttonPanel.Controls.Add(this.configMapBtn);
-            this.buttonPanel.Controls.Add(this.mainBtn);
-            this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonPanel.Location = new System.Drawing.Point(0, 161);
-            this.buttonPanel.Name = "buttonPanel";
-            this.buttonPanel.Padding = new System.Windows.Forms.Padding(0, 15, 0, 0);
-            this.buttonPanel.Size = new System.Drawing.Size(316, 218);
-            this.buttonPanel.TabIndex = 1;
-            // 
-            // childFormPanel
-            // 
-            this.childFormPanel.BackColor = System.Drawing.SystemColors.Control;
-            this.childFormPanel.Controls.Add(this.playBtn);
-            this.childFormPanel.Controls.Add(this.playerGroupB);
-            this.childFormPanel.Controls.Add(this.map);
-            this.childFormPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.childFormPanel.Location = new System.Drawing.Point(316, 0);
-            this.childFormPanel.Name = "childFormPanel";
-            this.childFormPanel.Size = new System.Drawing.Size(1184, 797);
-            this.childFormPanel.TabIndex = 1;
-            // 
-            // playBtn
-            // 
-            this.playBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playBtn.Location = new System.Drawing.Point(949, 72);
-            this.playBtn.Name = "playBtn";
-            this.playBtn.Size = new System.Drawing.Size(148, 40);
-            this.playBtn.TabIndex = 2;
-            this.playBtn.Text = "Jugar";
-            this.playBtn.UseVisualStyleBackColor = true;
-            this.playBtn.Click += new System.EventHandler(this.playBtn_Click);
-            // 
-            // playerGroupB
-            // 
-            this.playerGroupB.Controls.Add(this.playerSelector);
-            this.playerGroupB.Controls.Add(this.playerImage);
-            this.playerGroupB.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.playerGroupB.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playerGroupB.Location = new System.Drawing.Point(872, 135);
-            this.playerGroupB.Name = "playerGroupB";
-            this.playerGroupB.Size = new System.Drawing.Size(300, 340);
-            this.playerGroupB.TabIndex = 1;
-            this.playerGroupB.TabStop = false;
-            this.playerGroupB.Text = "Jugador";
-            // 
-            // playerSelector
-            // 
-            this.playerSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.playerSelector.FormattingEnabled = true;
-            this.playerSelector.Location = new System.Drawing.Point(17, 286);
-            this.playerSelector.Name = "playerSelector";
-            this.playerSelector.Size = new System.Drawing.Size(266, 28);
-            this.playerSelector.TabIndex = 1;
-            this.playerSelector.SelectedValueChanged += new System.EventHandler(this.playerSelector_SelectedValueChanged);
-            // 
-            // map
-            // 
-            this.map.AutoScroll = true;
-            this.map.AutoSize = true;
-            this.map.BackColor = System.Drawing.Color.Silver;
-            this.map.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.map.ColumnCount = 2;
-            this.map.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.map.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.map.Location = new System.Drawing.Point(7, 13);
-            this.map.Margin = new System.Windows.Forms.Padding(0);
-            this.map.Name = "map";
-            this.map.RowCount = 2;
-            this.map.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.map.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.map.Size = new System.Drawing.Size(827, 750);
-            this.map.TabIndex = 0;
-            // 
-            // playerImage
-            // 
-            this.playerImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.playerImage.Location = new System.Drawing.Point(17, 26);
-            this.playerImage.Name = "playerImage";
-            this.playerImage.Size = new System.Drawing.Size(266, 243);
-            this.playerImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.playerImage.TabIndex = 0;
-            this.playerImage.TabStop = false;
             // 
             // howToPlayBtn
             // 
@@ -165,6 +79,18 @@
             this.howToPlayBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.howToPlayBtn.UseVisualStyleBackColor = true;
             this.howToPlayBtn.Click += new System.EventHandler(this.howToPlayBtn_Click);
+            // 
+            // buttonPanel
+            // 
+            this.buttonPanel.Controls.Add(this.configPlayerBtn);
+            this.buttonPanel.Controls.Add(this.configMapBtn);
+            this.buttonPanel.Controls.Add(this.mainBtn);
+            this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonPanel.Location = new System.Drawing.Point(0, 161);
+            this.buttonPanel.Name = "buttonPanel";
+            this.buttonPanel.Padding = new System.Windows.Forms.Padding(0, 15, 0, 0);
+            this.buttonPanel.Size = new System.Drawing.Size(316, 218);
+            this.buttonPanel.TabIndex = 1;
             // 
             // configPlayerBtn
             // 
@@ -234,6 +160,80 @@
             this.logoPicBox.TabIndex = 0;
             this.logoPicBox.TabStop = false;
             // 
+            // childFormPanel
+            // 
+            this.childFormPanel.BackColor = System.Drawing.SystemColors.Control;
+            this.childFormPanel.Controls.Add(this.playBtn);
+            this.childFormPanel.Controls.Add(this.playerGroupB);
+            this.childFormPanel.Controls.Add(this.map);
+            this.childFormPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.childFormPanel.Location = new System.Drawing.Point(316, 0);
+            this.childFormPanel.Name = "childFormPanel";
+            this.childFormPanel.Size = new System.Drawing.Size(1184, 797);
+            this.childFormPanel.TabIndex = 1;
+            // 
+            // playBtn
+            // 
+            this.playBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.playBtn.Location = new System.Drawing.Point(949, 72);
+            this.playBtn.Name = "playBtn";
+            this.playBtn.Size = new System.Drawing.Size(148, 40);
+            this.playBtn.TabIndex = 2;
+            this.playBtn.Text = "Jugar";
+            this.playBtn.UseVisualStyleBackColor = true;
+            this.playBtn.Click += new System.EventHandler(this.playBtn_Click);
+            // 
+            // playerGroupB
+            // 
+            this.playerGroupB.Controls.Add(this.playerSelector);
+            this.playerGroupB.Controls.Add(this.playerImage);
+            this.playerGroupB.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.playerGroupB.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.playerGroupB.Location = new System.Drawing.Point(872, 135);
+            this.playerGroupB.Name = "playerGroupB";
+            this.playerGroupB.Size = new System.Drawing.Size(300, 340);
+            this.playerGroupB.TabIndex = 1;
+            this.playerGroupB.TabStop = false;
+            this.playerGroupB.Text = "Jugador";
+            // 
+            // playerSelector
+            // 
+            this.playerSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.playerSelector.FormattingEnabled = true;
+            this.playerSelector.Location = new System.Drawing.Point(17, 286);
+            this.playerSelector.Name = "playerSelector";
+            this.playerSelector.Size = new System.Drawing.Size(266, 28);
+            this.playerSelector.TabIndex = 1;
+            this.playerSelector.SelectedValueChanged += new System.EventHandler(this.playerSelector_SelectedValueChanged);
+            // 
+            // playerImage
+            // 
+            this.playerImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.playerImage.Location = new System.Drawing.Point(17, 26);
+            this.playerImage.Name = "playerImage";
+            this.playerImage.Size = new System.Drawing.Size(266, 243);
+            this.playerImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.playerImage.TabIndex = 0;
+            this.playerImage.TabStop = false;
+            // 
+            // map
+            // 
+            this.map.AutoScroll = true;
+            this.map.AutoSize = true;
+            this.map.BackColor = System.Drawing.Color.Silver;
+            this.map.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.map.ColumnCount = 2;
+            this.map.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.map.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.map.Location = new System.Drawing.Point(7, 13);
+            this.map.Margin = new System.Windows.Forms.Padding(0);
+            this.map.Name = "map";
+            this.map.RowCount = 2;
+            this.map.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.map.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.map.Size = new System.Drawing.Size(827, 750);
+            this.map.TabIndex = 0;
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -249,11 +249,11 @@
             this.Text = "Inteligencia Artificial";
             this.menuPanel.ResumeLayout(false);
             this.buttonPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).EndInit();
             this.childFormPanel.ResumeLayout(false);
             this.childFormPanel.PerformLayout();
             this.playerGroupB.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.playerImage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).EndInit();
             this.ResumeLayout(false);
 
         }
