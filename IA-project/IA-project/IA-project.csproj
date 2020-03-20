@@ -104,5 +104,8 @@
   <ItemGroup>
     <Folder Include="Resources\terrain_images\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\qmark_sign.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

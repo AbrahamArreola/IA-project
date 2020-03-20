@@ -19,6 +19,7 @@ namespace IA_project
         private string terrainLblAux = "Terreno {0} de {1} detectados";
         private int currentIndex = 1;
         private List<Terrain> terrainList = new List<Terrain>();
+        private string fileRoute;
 
         public Map()
         {
@@ -92,6 +93,7 @@ namespace IA_project
                 }
             }
 
+            fileRoute = route;
             terrainValues = values;
             return isValid;
         }
@@ -195,7 +197,7 @@ namespace IA_project
             }
         }
 
-        //Evento del boton anterior
+        //Evento del boton cargar
         private void loadBtn_Click(object sender, EventArgs e)
         {
             if(string.IsNullOrEmpty(nameTxt.Text) || imagesDisplayer.SelectedItems.Count == 0)
@@ -212,6 +214,8 @@ namespace IA_project
                 retrieveTerrainData();
                 mainWindow main = Owner as mainWindow;
                 main.terrainsDictionary = terrainList.ToDictionary(x => x.Value, x => x);
+                main.fileRoute = fileRoute;
+                main.loadMap();
                 Close();
             }
         }
