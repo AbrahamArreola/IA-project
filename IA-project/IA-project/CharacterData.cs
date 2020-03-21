@@ -10,13 +10,13 @@ namespace IA_project
     public class CharacterData
     {
         private String name;
-        private List<int> habilitiesInTerrain;
-        private Image characterImage;
+        Dictionary<int, decimal> movilityOfCharacter = new Dictionary<int, decimal>();
+        private Image image;
 
 
         public String Name { get => name; set => name = value; }
-        public List<int> HabilitiesInTerrain { get => habilitiesInTerrain; set => habilitiesInTerrain = value; }
-        public Image CharacterImage { get => characterImage; set => characterImage = value; }
+        public Dictionary<int,decimal> MovilityOfCharacter { get => movilityOfCharacter; set => movilityOfCharacter = value; }
+        public Image Image { get => image; set => image = value; }
 
 
 
