@@ -15,7 +15,6 @@ namespace IA_project
 {
     public partial class Character : Form
     {
-
         private const int NUMBER_OF_CHARACTERS = 10;
         private const int ROW_OF_VALUES = 2;
         private Dictionary<int, Terrain> terrainsDictionary = new Dictionary<int, Terrain>();
@@ -24,17 +23,18 @@ namespace IA_project
         int numberOfCharacters = 0;
 
         string[] imagesNames = new string[9] {
-            "endman","Horse","PigMan","Skelleton","spider","steve","villageMan","Wolf","Zombie"};
+            "Enderman","Horse","PigMan","Skelleton","Spider","Steve","VillageMan","Wolf","Creeper"};
+
+        private List<Image> imageList = new List<Image>();
 
 
-    public Character(Dictionary<int, Terrain> terrainsDictionary)
+        public Character(Dictionary<int, Terrain> terrainsDictionary)
         {    
             InitializeComponent();
             this.terrainsDictionary = terrainsDictionary;
             initializeCharacterList();
         }
 
-    
         private void initializeCharacterList()
         {
             //Inicializando todo lo referente al listview de imagenes
@@ -52,7 +52,9 @@ namespace IA_project
 
             foreach (string path in paths)
             {
-                images.Images.Add(Image.FromFile(path));
+                Image image = Image.FromFile(path);
+                images.Images.Add(image);
+                imageList.Add(image);
             }
 
             charactersDisplayer.SmallImageList = images;
@@ -67,15 +69,12 @@ namespace IA_project
             {
                nextCharacterBtn.Enabled = true;
                loadCharactersButton.Enabled = false;
-             }
-
-            
+            }
             initGridView();          
         }
 
         private void initGridView()
         {
-
             DataTable dataTableTerrains = new DataTable();
             dataTableTerrains.Columns.Add("Imagen", typeof(Image));
             dataTableTerrains.Columns.Add("Nombre del terreno");
@@ -87,15 +86,17 @@ namespace IA_project
                 dataTableTerrains.Rows.Add(new object[] { myObject.Value.Image,myObject.Value.Name });
             }
 
-
             dataGridViewTerrains.DataSource = dataTableTerrains;
 
             dataGridViewTerrains.Columns[0].ReadOnly = true;
             dataGridViewTerrains.Columns[0].Selected = false;
+            dataGridViewTerrains.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
 
             dataGridViewTerrains.Columns[1].ReadOnly = true;
             dataGridViewTerrains.Columns[1].Selected = false;
-            
+            dataGridViewTerrains.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            dataGridViewTerrains.Columns[2].SortMode = DataGridViewColumnSortMode.NotSortable;
         }
 
         private void Character_Load(object sender, EventArgs e)
@@ -159,7 +160,8 @@ namespace IA_project
             else if (!validateRows())
             {
                 errorProviderCharacter.Clear();
-                errorProviderCharacter.SetError(dataGridViewTerrains, "Todos los campos deben ser positivos o vacios");
+                errorProviderCharacter.SetError(dataGridViewTerrains, 
+                    "Todos los campos deben ser positivos o vacios");
             }
             else
             {
@@ -168,7 +170,7 @@ namespace IA_project
                 CharacterData character = new CharacterData();
 
                 character.Name = charactersDisplayer.SelectedItems[0].Text;      
-                character.Image = charactersDisplayer.SmallImageList.Images[charactersDisplayer.SelectedItems[0].ImageIndex];
+                character.Image = imageList[charactersDisplayer.SelectedItems[0].ImageIndex];
                 character.MovilityOfCharacter = makeDictionaryOfMovility();
 
                 charactersDisplayer.Items.Remove(charactersDisplayer.SelectedItems[0]);
@@ -188,15 +190,15 @@ namespace IA_project
                     nextCharacterBtn.Enabled = false;
                     dataGridViewTerrains.Columns[2].ReadOnly = true;
                 }
-
             }
         }
 
         private void loadCharactersButton_Click(object sender, EventArgs e)
         {
-           // characters; esta es la lista con los personajes, mas no se como quieras recibirla
             mainWindow main = Owner as mainWindow;
-            main.loadMap();
+            main.characterList = characters;
+            main.loadCharacters();
+            main.playersConfigured = true;
             Close();
         }
 

@@ -33,7 +33,7 @@
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.configPlayerBtn = new System.Windows.Forms.Button();
             this.configMapBtn = new System.Windows.Forms.Button();
-            this.mainBtn = new System.Windows.Forms.Button();
+            this.resetButton = new System.Windows.Forms.Button();
             this.logoPicBox = new System.Windows.Forms.PictureBox();
             this.childFormPanel = new System.Windows.Forms.Panel();
             this.playBtn = new System.Windows.Forms.Button();
@@ -84,7 +84,7 @@
             // 
             this.buttonPanel.Controls.Add(this.configPlayerBtn);
             this.buttonPanel.Controls.Add(this.configMapBtn);
-            this.buttonPanel.Controls.Add(this.mainBtn);
+            this.buttonPanel.Controls.Add(this.resetButton);
             this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.buttonPanel.Location = new System.Drawing.Point(0, 161);
             this.buttonPanel.Name = "buttonPanel";
@@ -130,24 +130,24 @@
             this.configMapBtn.UseVisualStyleBackColor = true;
             this.configMapBtn.Click += new System.EventHandler(this.configMapBtn_Click);
             // 
-            // mainBtn
+            // resetButton
             // 
-            this.mainBtn.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mainBtn.FlatAppearance.BorderSize = 0;
-            this.mainBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.mainBtn.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mainBtn.ForeColor = System.Drawing.Color.White;
-            this.mainBtn.Image = global::IA_project.Properties.Resources.home;
-            this.mainBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.mainBtn.Location = new System.Drawing.Point(0, 15);
-            this.mainBtn.Name = "mainBtn";
-            this.mainBtn.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
-            this.mainBtn.Size = new System.Drawing.Size(316, 68);
-            this.mainBtn.TabIndex = 0;
-            this.mainBtn.Text = "           Principal";
-            this.mainBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.mainBtn.UseVisualStyleBackColor = true;
-            this.mainBtn.Click += new System.EventHandler(this.mainBtn_Click);
+            this.resetButton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.resetButton.FlatAppearance.BorderSize = 0;
+            this.resetButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.resetButton.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.resetButton.ForeColor = System.Drawing.Color.White;
+            this.resetButton.Image = global::IA_project.Properties.Resources.home;
+            this.resetButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.resetButton.Location = new System.Drawing.Point(0, 15);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            this.resetButton.Size = new System.Drawing.Size(316, 68);
+            this.resetButton.TabIndex = 0;
+            this.resetButton.Text = "           Reiniciar";
+            this.resetButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
             // logoPicBox
             // 
@@ -262,7 +262,7 @@
 
         private System.Windows.Forms.Panel menuPanel;
         private System.Windows.Forms.Panel buttonPanel;
-        private System.Windows.Forms.Button mainBtn;
+        private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.PictureBox logoPicBox;
         private System.Windows.Forms.Button configPlayerBtn;
         private System.Windows.Forms.Button configMapBtn;
@@ -270,9 +270,9 @@
         private System.Windows.Forms.TableLayoutPanel map;
         private System.Windows.Forms.GroupBox playerGroupB;
         private System.Windows.Forms.Button playBtn;
-        private System.Windows.Forms.PictureBox playerImage;
-        private System.Windows.Forms.ComboBox playerSelector;
         private System.Windows.Forms.Button howToPlayBtn;
+        public System.Windows.Forms.PictureBox playerImage;
+        public System.Windows.Forms.ComboBox playerSelector;
     }
 }
 

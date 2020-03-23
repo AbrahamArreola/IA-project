@@ -20,6 +20,7 @@ namespace IA_project
         //variables contenedoras
         private const int mapSize = 16;
         public Dictionary<int, Terrain> terrainsDictionary = null;
+        public List<CharacterData> characterList = new List<CharacterData>();
         public string fileRoute;
         private Panel startPanel = null;
         private Panel goalPanel = null;
@@ -31,11 +32,11 @@ namespace IA_project
         private int[] currentCoord;
 
         //Variables bandera
-        bool gameStarted = false;
-        bool terrainsConfigured = false;
-        bool playersConfigured = false;
-        bool initialStateSet = false;
-        bool finalStateSet = false;
+        private bool gameStarted = false;
+        private bool terrainsConfigured = false;
+        public bool playersConfigured = false;
+        private bool initialStateSet = false;
+        private bool finalStateSet = false;
 
         public mainWindow()
         {
@@ -47,9 +48,6 @@ namespace IA_project
 
             //Dibujando el mapa al iniciar
             drawMap();
-
-            //Cargando combobox de selección de jugador
-            playerSelector.Items.Add("Steve");
 
             //Botón de jugar inicia desactivado
             playBtn.Enabled = false;
@@ -66,6 +64,23 @@ namespace IA_project
             gf.DrawImage(bm1, new Rectangle(0, 0, bm1.Width, bm1.Height));
             gf.DrawImage(bm2, new Rectangle(0, 0, bm1.Width, bm1.Height));
             containerPanel.BackgroundImage = setOpacity(finalImage, Convert.ToSingle(0.6));
+        }
+
+        public void loadCharacters()
+        {
+            playerImage.Image = null;
+            playerSelector.Items.Clear();
+            foreach(CharacterData character in characterList)
+            {
+                playerSelector.Items.Add(character.Name);
+            }
+        }
+
+        public void cleanPlayerSelector()
+        {
+            playerImage.Image = null;
+            characterList = null;
+            playerSelector.Items.Clear();
         }
         #endregion
 
@@ -140,7 +155,8 @@ namespace IA_project
                 attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
                 //now draw the image  
-                gfx.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
+                gfx.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, 
+                    image.Width, image.Height, GraphicsUnit.Pixel, attributes);
             }
             return bmp;
         }
@@ -153,6 +169,7 @@ namespace IA_project
             goalCoord = new int[] { 0, 0 };
             initialStateSet = false;
             finalStateSet = false;
+            map.SuspendLayout();
             for (int i = 1; i < map.RowCount; i++)
             {
                 for (int j = 1; j < map.ColumnCount; j++)
@@ -160,6 +177,7 @@ namespace IA_project
                     map.Controls.Remove(map.GetControlFromPosition(j, i));
                 }
             }
+            map.ResumeLayout();
         }
 
         public void loadMap()
@@ -261,6 +279,13 @@ namespace IA_project
             {
                 case "inicio":
                     if (panel == goalPanel) break;
+                    if(characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                       [matrixPosition[coords[0] - 1, coords[1] - 1].Value] == -1)
+                    {
+                        MessageBox.Show(this, "El ser no se puede mover en el estado inicial", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
                     if(startPanel != null)
                     {
                         startPanel.Controls[0].Text = "";
@@ -278,11 +303,19 @@ namespace IA_project
                     startCoord[0] = coords[0] - 1;
                     startCoord[1] = coords[1] - 1;
                     initialStateSet = true;
+                    playerSelector.Enabled = false;
                     if (playersConfigured && finalStateSet) playBtn.Enabled = true;
                     break;
 
                 case "final":
                     if (panel == startPanel) break;
+                    if (characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                       [matrixPosition[coords[0] - 1, coords[1] - 1].Value] == -1)
+                    {
+                        MessageBox.Show(this, "El ser no se puede mover en el estado final", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
                     if (goalPanel != null)
                     {
                         goalPanel.Controls[0].Text = "";
@@ -292,6 +325,7 @@ namespace IA_project
                     goalCoord[0] = coords[0] - 1;
                     goalCoord[1] = coords[1] - 1;
                     finalStateSet = true;
+                    playerSelector.Enabled = false;
                     if (playersConfigured && initialStateSet) playBtn.Enabled = true;
                     break;
 
@@ -306,6 +340,21 @@ namespace IA_project
         #endregion
 
         #region configEvents
+        //Evento de botón Reiniciar
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            resetMap();
+            gameStarted = false;
+            configMapBtn.Enabled = true;
+            configPlayerBtn.Enabled = true;
+            howToPlayBtn.Enabled = true;
+            playerSelector.Enabled = true;
+            terrainsConfigured = false;
+            playersConfigured = false;
+            terrainsDictionary = null;
+            cleanPlayerSelector();
+        }
+
         //Evento de botón "configurar terrenos" en menú lateral
         private void configMapBtn_Click(object sender, EventArgs e)
         {
@@ -314,12 +363,6 @@ namespace IA_project
             configMapWindow.ShowDialog();
             terrainsConfigured = true;
             playersConfigured = false;
-        }
-
-        //Evento de botón "Principal" en menú lateral
-        private void mainBtn_Click(object sender, EventArgs e)
-        {
-
         }
 
         //Evento de botón "configurar jugadores" en menú lateral
@@ -332,11 +375,6 @@ namespace IA_project
             }
             else
             {
-                playersConfigured = true;
-                foreach(var item in terrainsDictionary)
-                {
-                    Debug.WriteLine(item.Key + ":" + item.Value.Name);
-                }
                 Character confiCharacterWindow = new Character(terrainsDictionary);
                 AddOwnedForm(confiCharacterWindow);
                 confiCharacterWindow.ShowDialog();
@@ -362,6 +400,7 @@ namespace IA_project
             configMapBtn.Enabled = false;
             configPlayerBtn.Enabled = false;
             howToPlayBtn.Enabled = false;
+            playerSelector.Enabled = false;
             Focus();
             currentCoord = startCoord;
         }
@@ -369,10 +408,7 @@ namespace IA_project
         //Evento de cambio de combobox para seleccionar jugador
         private void playerSelector_SelectedValueChanged(object sender, EventArgs e)
         {
-            if(playerSelector.SelectedItem.ToString() == "Steve")
-            {
-                playerImage.Image = Image.FromFile("D:\\AbrahamArreolaPC\\Pictures\\Proyecto\\steve.png");
-            }
+            playerImage.Image = characterList.Find(x => x.Name == playerSelector.SelectedItem.ToString()).Image;
         }
 
         #endregion
@@ -388,6 +424,7 @@ namespace IA_project
                 configMapBtn.Enabled = true;
                 configPlayerBtn.Enabled = true;
                 howToPlayBtn.Enabled = true;
+                playerSelector.Enabled = true;
                 resetMap();
                 loadMap();
             }
@@ -419,22 +456,42 @@ namespace IA_project
             {
                 if (keyData == Keys.Up)
                 {
-                    if(currentCoord[0] > 0) movePlayer(keyData);
+                    if(currentCoord[0] > 0)
+                    {
+                        if(characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                            [matrixPosition[currentCoord[0] - 1, currentCoord[1]].Value] != -1)
+                            movePlayer(keyData);
+                    }
                 }
 
                 else if (keyData == Keys.Down)
                 {
-                    if (currentCoord[0] < matrixPosition.GetLength(0) - 1) movePlayer(keyData);
+                    if (currentCoord[0] < matrixPosition.GetLength(0) - 1)
+                    {
+                        if (characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                            [matrixPosition[currentCoord[0] + 1, currentCoord[1]].Value] != -1)
+                            movePlayer(keyData);
+                    }
                 }
 
                 else if (keyData == Keys.Left)
                 {
-                    if (currentCoord[1] > 0) movePlayer(keyData);
+                    if (currentCoord[1] > 0)
+                    {
+                        if (characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                            [matrixPosition[currentCoord[0], currentCoord[1] - 1].Value] != -1)
+                            movePlayer(keyData);
+                    }
                 }
 
                 else if (keyData == Keys.Right)
                 {
-                    if (currentCoord[1] < matrixPosition.GetLength(1) - 1) movePlayer(keyData);
+                    if (currentCoord[1] < matrixPosition.GetLength(1) - 1)
+                    {
+                        if (characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                            [matrixPosition[currentCoord[0], currentCoord[1] + 1].Value] != -1)
+                            movePlayer(keyData);
+                    }
                 }
                 goalReached();
             }
