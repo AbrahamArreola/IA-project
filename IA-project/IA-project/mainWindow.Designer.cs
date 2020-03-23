@@ -36,6 +36,7 @@
             this.resetButton = new System.Windows.Forms.Button();
             this.logoPicBox = new System.Windows.Forms.PictureBox();
             this.childFormPanel = new System.Windows.Forms.Panel();
+            this.stopBtn = new System.Windows.Forms.Button();
             this.playBtn = new System.Windows.Forms.Button();
             this.playerGroupB = new System.Windows.Forms.GroupBox();
             this.playerSelector = new System.Windows.Forms.ComboBox();
@@ -163,6 +164,7 @@
             // childFormPanel
             // 
             this.childFormPanel.BackColor = System.Drawing.SystemColors.Control;
+            this.childFormPanel.Controls.Add(this.stopBtn);
             this.childFormPanel.Controls.Add(this.playBtn);
             this.childFormPanel.Controls.Add(this.playerGroupB);
             this.childFormPanel.Controls.Add(this.map);
@@ -172,12 +174,23 @@
             this.childFormPanel.Size = new System.Drawing.Size(1184, 797);
             this.childFormPanel.TabIndex = 1;
             // 
+            // stopBtn
+            // 
+            this.stopBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stopBtn.Location = new System.Drawing.Point(1040, 72);
+            this.stopBtn.Name = "stopBtn";
+            this.stopBtn.Size = new System.Drawing.Size(132, 40);
+            this.stopBtn.TabIndex = 3;
+            this.stopBtn.Text = "Detener";
+            this.stopBtn.UseVisualStyleBackColor = true;
+            this.stopBtn.Click += new System.EventHandler(this.stopBtn_Click);
+            // 
             // playBtn
             // 
             this.playBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playBtn.Location = new System.Drawing.Point(949, 72);
+            this.playBtn.Location = new System.Drawing.Point(872, 72);
             this.playBtn.Name = "playBtn";
-            this.playBtn.Size = new System.Drawing.Size(148, 40);
+            this.playBtn.Size = new System.Drawing.Size(134, 40);
             this.playBtn.TabIndex = 2;
             this.playBtn.Text = "Jugar";
             this.playBtn.UseVisualStyleBackColor = true;
@@ -273,6 +286,7 @@
         private System.Windows.Forms.Button howToPlayBtn;
         public System.Windows.Forms.PictureBox playerImage;
         public System.Windows.Forms.ComboBox playerSelector;
+        private System.Windows.Forms.Button stopBtn;
     }
 }
 

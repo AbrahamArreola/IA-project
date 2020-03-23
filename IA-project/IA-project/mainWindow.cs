@@ -51,6 +51,8 @@ namespace IA_project
 
             //Botón de jugar inicia desactivado
             playBtn.Enabled = false;
+
+            stopBtn.Enabled = false;
         }
 
         #region configPlayer
@@ -345,6 +347,7 @@ namespace IA_project
         {
             resetMap();
             gameStarted = false;
+            stopBtn.Enabled = false;
             configMapBtn.Enabled = true;
             configPlayerBtn.Enabled = true;
             howToPlayBtn.Enabled = true;
@@ -397,12 +400,30 @@ namespace IA_project
         {
             gameStarted = true;
             playBtn.Enabled = false;
+            stopBtn.Enabled = true;
             configMapBtn.Enabled = false;
             configPlayerBtn.Enabled = false;
             howToPlayBtn.Enabled = false;
             playerSelector.Enabled = false;
             Focus();
             currentCoord = startCoord;
+        }
+
+        //Evento de botón Detener
+        private void stopBtn_Click(object sender, EventArgs e)
+        {
+            gameStarted = false;
+            initialStateSet = false;
+            finalStateSet = false;
+            stopBtn.Enabled = false;
+            configMapBtn.Enabled = true;
+            configPlayerBtn.Enabled = true;
+            howToPlayBtn.Enabled = true;
+            playerSelector.Enabled = true;
+            resetMap();
+            loadMap();
+            MessageBox.Show(this, "Juego detenido", "Gameover",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         //Evento de cambio de combobox para seleccionar jugador
@@ -421,6 +442,7 @@ namespace IA_project
                 MessageBox.Show(this, "Meta alcanzada", "Gameover",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 gameStarted = false;
+                stopBtn.Enabled = false;
                 configMapBtn.Enabled = true;
                 configPlayerBtn.Enabled = true;
                 howToPlayBtn.Enabled = true;
