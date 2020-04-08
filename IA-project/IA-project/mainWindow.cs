@@ -38,6 +38,9 @@ namespace IA_project
         private bool initialStateSet = false;
         private bool finalStateSet = false;
 
+        //Variable contadora de visitas
+        private int visitNumber;
+
         public mainWindow()
         {
             InitializeComponent();
@@ -49,10 +52,11 @@ namespace IA_project
             //Dibujando el mapa al iniciar
             drawMap();
 
-            //Botón de jugar inicia desactivado
+            //Botón de jugar desactivado al inicio
             playBtn.Enabled = false;
 
             stopBtn.Enabled = false;
+            visitNumber = 1;
         }
 
         #region configPlayer
@@ -140,23 +144,23 @@ namespace IA_project
         {
             Bitmap bmp = new Bitmap(image.Width, image.Height);
 
-            //create a graphics object from the image  
+            //Crea un objeto de tipo Graphics a partir de la imagen
             using (Graphics gfx = Graphics.FromImage(bmp))
             {
 
-                //create a color matrix object  
+                //Crea un objeto ColorMatrix
                 ColorMatrix matrix = new ColorMatrix();
 
-                //set the opacity  
+                //Asigna la opacidad a dicha matriz
                 matrix.Matrix33 = opacity;
 
-                //create image attributes  
+                //Crea los atributos de la imagen
                 ImageAttributes attributes = new ImageAttributes();
 
-                //set the color(opacity) of the image  
+                //Cambia la opacidad de la imagen
                 attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
-                //now draw the image  
+                //Pinta la imagen en el contenedor designado 
                 gfx.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, 
                     image.Width, image.Height, GraphicsUnit.Pixel, attributes);
             }
@@ -295,11 +299,9 @@ namespace IA_project
                             setOpacity(matrixPosition[startCoord[0], startCoord[1]].Image, Convert.ToSingle(0.6));
 
                         startPanel.Controls[1].Text = "";
-                        matrixPosition[startCoord[0], startCoord[1]].VisitNumber--;
                     }
                     panel.Controls[0].Text = "Inicio";
-                    panel.Controls[1].Text = 
-                        (++matrixPosition[coords[0] - 1, coords[1] - 1].VisitNumber).ToString() + ",";
+                    panel.Controls[1].Text = visitNumber + ",";
                     drawPlayer(panel, playerImage.Image);
                     startPanel = panel;
                     startCoord[0] = coords[0] - 1;
@@ -355,6 +357,7 @@ namespace IA_project
             terrainsConfigured = false;
             playersConfigured = false;
             terrainsDictionary = null;
+            visitNumber = 1;
             cleanPlayerSelector();
         }
 
@@ -420,6 +423,7 @@ namespace IA_project
             configPlayerBtn.Enabled = true;
             howToPlayBtn.Enabled = true;
             playerSelector.Enabled = true;
+            visitNumber = 1;
             resetMap();
             loadMap();
             MessageBox.Show(this, "Juego detenido", "Gameover",
@@ -447,6 +451,7 @@ namespace IA_project
                 configPlayerBtn.Enabled = true;
                 howToPlayBtn.Enabled = true;
                 playerSelector.Enabled = true;
+                visitNumber = 1;
                 resetMap();
                 loadMap();
             }
@@ -469,7 +474,7 @@ namespace IA_project
                             playerImage.Image);
 
             map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1).Controls[1].Text +=
-                string.Format("{0},", ++matrixPosition[currentCoord[0], currentCoord[1]].VisitNumber);
+                string.Format("{0},", ++visitNumber);
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
