@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Drawing.Imaging;
-using System.Drawing.Drawing2D;
 using System.Reflection;
 
 namespace IA_project
@@ -41,6 +36,9 @@ namespace IA_project
         //Variable contadora de visitas
         private int visitNumber;
 
+        //Lista de ComboBoxes de orden de expansión
+        private List<ComboBox> comboBoxValues = new List<ComboBox>();
+
         public mainWindow()
         {
             InitializeComponent();
@@ -57,6 +55,9 @@ namespace IA_project
 
             stopBtn.Enabled = false;
             visitNumber = 1;
+
+            //Inicializando los comboBox de orden de expasión
+            initializeComboBoxes();
         }
 
         #region configPlayer
@@ -404,6 +405,7 @@ namespace IA_project
             gameStarted = true;
             playBtn.Enabled = false;
             stopBtn.Enabled = true;
+            resetButton.Enabled = false;
             configMapBtn.Enabled = false;
             configPlayerBtn.Enabled = false;
             howToPlayBtn.Enabled = false;
@@ -418,6 +420,7 @@ namespace IA_project
             gameStarted = false;
             initialStateSet = false;
             finalStateSet = false;
+            resetButton.Enabled = false;
             stopBtn.Enabled = false;
             configMapBtn.Enabled = true;
             configPlayerBtn.Enabled = true;
@@ -524,6 +527,66 @@ namespace IA_project
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+        #endregion
+
+        #region ComboBoxEvents
+
+        //Llamada en el constructor para inicializar los comboBoxes de "orden de expansion"
+        private void initializeComboBoxes()
+        {
+            string[] directionsList = { "Arriba (↑)", "Derecha (→)", "Abajo (↓)", "Izquierda (←)" };
+
+            firstComboBox.DataSource = (string[])directionsList.Clone();
+            secondComboBox.DataSource = (string[])directionsList.Clone();
+            thirdComboBox.DataSource = (string[])directionsList.Clone();
+            fourthComboBox.DataSource = (string[])directionsList.Clone();
+
+            //Index 0 = Arriba (↑), index 1 = Derecha (→), index 2 = Abajo (↓), index 3 = Izquierda (←)
+            secondComboBox.SelectedIndex = 1;
+            thirdComboBox.SelectedIndex = 2;
+            fourthComboBox.SelectedIndex = 3;
+
+            /*Agrega los elementos a una lista en la que el index será arriba, abajo, derecha, izquierda de
+            acuerdo al criterio anterior, y contendrá un comboBox, por lo que si se tiene que
+            comboBoxValues[0], quiere decir que el valor que contenga en dicho index es el comboBox que
+            contiene el valor "Arriba" seleccionado*/
+            comboBoxValues.Add(firstComboBox);
+            comboBoxValues.Add(secondComboBox);
+            comboBoxValues.Add(thirdComboBox);
+            comboBoxValues.Add(fourthComboBox);
+        }
+
+        /*Intercambia el item de los comboBox, por ejemplo: si el primer comboBox tiene el valor "Arriba" y
+        se selecciona el valor de "Abajo", se intercambian los valores con el comboBox que tiene el valor de "Abajo*/
+        private void swapItems(ComboBox comboBox)
+        {
+            if(comboBoxValues.Count != 0)
+            {
+                //Se busca el index donde se encuentra el comboBox
+                int tempIndex = comboBoxValues.FindIndex(x => x == comboBox);
+                
+                //Se obtiene el comboBox que contiene el nuevo valor seleccionado
+                ComboBox tempComboBox = comboBoxValues[comboBox.SelectedIndex];
+
+                /*Al comboBox seleccionado se le cambia el index en la interfáz, pero al comboBox que contenía
+                 el index que se acaba de seleccionar se le cambia con el index del comboBox seleccionado*/
+                tempComboBox.SelectedIndex = tempIndex;
+
+                //Se actualiza la lista de valores
+                comboBoxValues[comboBox.SelectedIndex] = comboBox;
+                comboBoxValues[tempIndex] = tempComboBox;
+            }
+        }
+
+        //Se programa el evento de cambio de index para todos los comboBox del grupo "orden de expansión"
+        private void firstComboBox_SelectedIndexChanged(object sender, EventArgs e) { swapItems((ComboBox)sender); }
+
+        private void secondComboBox_SelectedIndexChanged(object sender, EventArgs e) { swapItems((ComboBox)sender); }
+
+        private void thirdComboBox_SelectedIndexChanged(object sender, EventArgs e) { swapItems((ComboBox)sender); }
+
+        private void fourthComboBox_SelectedIndexChanged(object sender, EventArgs e) { swapItems((ComboBox)sender); }
+
         #endregion
     }
 }
