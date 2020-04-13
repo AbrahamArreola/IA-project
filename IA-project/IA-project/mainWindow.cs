@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace IA_project
 {
@@ -39,6 +41,9 @@ namespace IA_project
         //Lista de ComboBoxes de orden de expansión
         private List<ComboBox> comboBoxValues = new List<ComboBox>();
 
+        //Control para cancelar una tarea asíncrona
+        private CancellationTokenSource cancelTask = new CancellationTokenSource();
+
         public mainWindow()
         {
             InitializeComponent();
@@ -58,6 +63,13 @@ namespace IA_project
 
             //Inicializando los comboBox de orden de expasión
             initializeComboBoxes();
+            initializeAlgorithmsCb();
+
+            //Permita que se puedan actualizar los controles en hilos diferentes del principal
+            CheckForIllegalCrossThreadCalls = false;
+
+            //Eliminar llamada a función al terminar el programa
+            initializeToPlay();
         }
 
         #region configPlayer
@@ -402,7 +414,6 @@ namespace IA_project
         //Evento de botón "Jugar" en ventana principal
         private void playBtn_Click(object sender, EventArgs e)
         {
-            gameStarted = true;
             playBtn.Enabled = false;
             stopBtn.Enabled = true;
             resetButton.Enabled = false;
@@ -410,8 +421,24 @@ namespace IA_project
             configPlayerBtn.Enabled = false;
             howToPlayBtn.Enabled = false;
             playerSelector.Enabled = false;
-            Focus();
+            ExpasionOrderGb.Enabled = false;
+            AlgorithmsGb.Enabled = false;
             currentCoord = startCoord;
+
+            switch (AlgorithmsCb.SelectedIndex)
+            {
+                //Caso 0 = Mover con teclas
+                case 0:
+                    gameStarted = true;
+                    Focus();
+                    break;
+
+                //Caso 1 = Algoritmo primero en profundidad
+                case 1:
+                    sortComboBoxes();
+                    runDepthFirstSearchAsync(cancelTask.Token);
+                    break;
+            }
         }
 
         //Evento de botón Detener
@@ -420,17 +447,25 @@ namespace IA_project
             gameStarted = false;
             initialStateSet = false;
             finalStateSet = false;
-            resetButton.Enabled = false;
+            resetButton.Enabled = true;
             stopBtn.Enabled = false;
             configMapBtn.Enabled = true;
             configPlayerBtn.Enabled = true;
             howToPlayBtn.Enabled = true;
             playerSelector.Enabled = true;
+            ExpasionOrderGb.Enabled = true;
+            AlgorithmsGb.Enabled = true;
             visitNumber = 1;
-            resetMap();
-            loadMap();
+            //Si el combobox es diferente de cero (algoritmo seleccionado), se para el evento asíncrono
+            if (AlgorithmsCb.SelectedIndex != 0 && cancelTask != null)
+            {
+                cancelTask.Cancel();
+            }
+
             MessageBox.Show(this, "Juego detenido", "Gameover",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+            resetMap();
+            loadMap();
         }
 
         //Evento de cambio de combobox para seleccionar jugador
@@ -454,6 +489,9 @@ namespace IA_project
                 configPlayerBtn.Enabled = true;
                 howToPlayBtn.Enabled = true;
                 playerSelector.Enabled = true;
+                resetButton.Enabled = true;
+                ExpasionOrderGb.Enabled = true;
+                AlgorithmsGb.Enabled = true;
                 visitNumber = 1;
                 resetMap();
                 loadMap();
@@ -529,7 +567,7 @@ namespace IA_project
         }
         #endregion
 
-        #region ComboBoxEvents
+        #region ExpasionOrderComboBoxEvents
 
         //Llamada en el constructor para inicializar los comboBoxes de "orden de expansion"
         private void initializeComboBoxes()
@@ -586,6 +624,231 @@ namespace IA_project
         private void thirdComboBox_SelectedIndexChanged(object sender, EventArgs e) { swapItems((ComboBox)sender); }
 
         private void fourthComboBox_SelectedIndexChanged(object sender, EventArgs e) { swapItems((ComboBox)sender); }
+
+        //Ordena los comboBoxes para poder decretar el orden de expansión
+        private void sortComboBoxes()
+        {
+            List<ComboBox> tempComboBoxList = new List<ComboBox>();
+
+            tempComboBoxList.Add(comboBoxValues.Find(x => x == firstComboBox));
+            tempComboBoxList.Add(comboBoxValues.Find(x => x == secondComboBox));
+            tempComboBoxList.Add(comboBoxValues.Find(x => x == thirdComboBox));
+            tempComboBoxList.Add(comboBoxValues.Find(x => x == fourthComboBox));
+
+            comboBoxValues = tempComboBoxList;
+        }
+
+        #endregion
+
+        #region Algorithms
+
+        //Inicializa el comboBox para seleccionar si jugar con teclas o ejecutar algún algoritmo
+        private void initializeAlgorithmsCb()
+        {
+            string[] Algorithms = { "Mover con teclas", "Profundidad" };
+
+            AlgorithmsCb.DataSource = Algorithms;
+        }
+
+        //Función para testear. P.D. eliminar al terminar el programa
+        private void initializeToPlay()
+        {
+            //Cargar terrenos
+            fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm.txt";
+
+            Dictionary<int, Terrain> terrains = new Dictionary<int, Terrain>();
+
+            string absolutePath = AppDomain.CurrentDomain.BaseDirectory;
+            string imagesPath = string.Format("{0}Resources\\terrain_images",
+                                Path.GetFullPath(Path.Combine(absolutePath, @"..\..\")));
+
+            for (int i = 1; i <= 2; i++)
+            {
+                Terrain terrain = new Terrain
+                {
+                    Value = i,
+                    Name = i.ToString(),
+                    Image = Image.FromFile(imagesPath + String.Format("//terreno {0}.jpg", i))
+                };
+                terrains[i] = terrain;
+            }
+
+            terrainsDictionary = terrains;
+            loadMap();
+
+            //Cargar personajes
+            List<CharacterData> characters = new List<CharacterData>();
+
+            imagesPath = string.Format("{0}Resources\\characters_images", 
+                         Path.GetFullPath(Path.Combine(absolutePath, @"..\..\")));
+
+            string[] paths = Directory.GetFiles(imagesPath);
+
+            for(int i = 1; i <= 2; i++)
+            {
+                CharacterData character = new CharacterData
+                {
+                    Name = i.ToString(),
+                    Image = Image.FromFile(paths[i]),
+                    MovilityOfCharacter = new Dictionary<int, decimal>
+                    {
+                        {1,1}, {2,-1}
+                    }
+                };
+                characters.Add(character);
+            }
+            characterList = characters;
+
+            playersConfigured = true;
+            loadCharacters();
+        }
+
+        //Función para mover el jugador a una coordenada dada
+        private void movePlayerAlgorithm(int[] coord)
+        {
+            //Duerme el hilo 1 segundo para ver el movimiento
+            Thread.Sleep(1000);
+
+            //Borra al jugador de la posición en la que estaba
+            map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1).BackgroundImage =
+                        setOpacity(matrixPosition[currentCoord[0], currentCoord[1]].Image, Convert.ToSingle(0.6));
+
+            //Pinta al jugador en la nueva posición dada
+            drawPlayer(((Panel)map.GetControlFromPosition(coord[1] + 1, coord[0] + 1)), playerImage.Image);
+
+            //Actualiza el contador de visitas en la nueva posición
+            map.GetControlFromPosition(coord[1] + 1, coord[0] + 1).Controls[1].Text +=
+                string.Format("{0},", ++visitNumber);
+
+            currentCoord = coord;
+        }
+
+        //Ejecuta la función del algoritmo de manera asíncrona
+        async void runDepthFirstSearchAsync(CancellationToken endTask)
+        {
+            await Task.Run(() => { DepthFirstSearch(endTask); });
+            goalReached();
+        }
+
+        //Función que ejecuta el algoritmo primero en profundidad
+        private void DepthFirstSearch(CancellationToken endTask)
+        {
+            try
+            {
+                bool isFirstNode = true;
+                Stack<int[]> auxStack = new Stack<int[]>();
+                List<int[]> shownCoords = new List<int[]>();
+                List<int[]> visitedNodes = new List<int[]>();
+                int[] currentState;
+
+                auxStack.Push(startCoord);
+                while (auxStack.Count != 0)
+                {
+                    if (endTask.IsCancellationRequested) throw new TaskCanceledException();
+
+                    currentState = auxStack.Pop();
+                    if (!isFirstNode)
+                    {
+                        movePlayerAlgorithm(currentState);
+                    }
+                    else
+                    {
+                        isFirstNode = false;
+                    }
+
+                    if (currentCoord.SequenceEqual(goalCoord))
+                    {
+                        return;
+                    }
+
+                    if (!visitedNodes.Any(x => x.SequenceEqual(currentState)))
+                    {
+                        List<int[]> statesList = getStates(currentState);
+                        shownCoords.Add(currentState);
+                        visitedNodes.Add(currentState);
+                        foreach (int[] state in statesList)
+                        {
+                            if (!shownCoords.Any(x => x.SequenceEqual(state)))
+                            {
+                                auxStack.Push(state);
+                                shownCoords.Add(state);
+                                Debug.WriteLine(state[0] + ":" + state[1]);
+                            }
+                        }
+                    }
+                }
+            } catch (TaskCanceledException msg)
+            {
+                Debug.WriteLine(msg);
+            }
+        }
+
+        //Obtiene los estados (coordenadas) a los que se puede mover el jugador de acuerdo al orden de expansión
+        private List<int[]> getStates(int[] coord) 
+        {
+            List<int[]> statesList = new List<int[]>();
+
+            //Itera sobre la lista de comboBoxes y saca su index que corresponde a una posición
+            foreach (ComboBox comboBox in comboBoxValues)
+            {
+                int[] tempCoord = (int[])coord.Clone();
+                switch (comboBox.SelectedIndex)
+                {
+                    //Obtener posición arriba
+                    case 0:
+                        if (tempCoord[0] > 0)
+                        {
+                            if (characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                                [matrixPosition[tempCoord[0] - 1, tempCoord[1]].Value] != -1)
+                            {
+                                tempCoord[0]--;
+                                statesList.Add(tempCoord);
+                            }
+                        }
+                        break;
+
+                    //Obtener posición derecha
+                    case 1:
+                        if (tempCoord[1] < matrixPosition.GetLength(1) - 1)
+                        {
+                            if (characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                                [matrixPosition[tempCoord[0], tempCoord[1] + 1].Value] != -1)
+                            {
+                                tempCoord[1]++;
+                                statesList.Add(tempCoord);
+                            }
+                        }
+                        break;
+
+                    //Obtener posición abajo
+                    case 2:
+                        if (tempCoord[0] < matrixPosition.GetLength(0) - 1)
+                        {
+                            if (characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                                [matrixPosition[tempCoord[0] + 1, tempCoord[1]].Value] != -1)
+                            {
+                                tempCoord[0]++;
+                                statesList.Add(tempCoord);
+                            }
+                        }
+                        break;
+
+                    //Obtener posición izquierda
+                    case 3:
+                        if (tempCoord[1] > 0)
+                        {
+                            if (characterList[playerSelector.SelectedIndex].MovilityOfCharacter
+                                [matrixPosition[tempCoord[0], tempCoord[1] - 1].Value] != -1)
+                            {
+                                tempCoord[1]--;
+                                statesList.Add(tempCoord);
+                            }
+                        }
+                        break;
+                }
+            }
+            return statesList;
+        }
 
         #endregion
     }

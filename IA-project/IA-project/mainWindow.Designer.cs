@@ -36,7 +36,9 @@
             this.resetButton = new System.Windows.Forms.Button();
             this.logoPicBox = new System.Windows.Forms.PictureBox();
             this.childFormPanel = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.AlgorithmsGb = new System.Windows.Forms.GroupBox();
+            this.AlgorithmsCb = new System.Windows.Forms.ComboBox();
+            this.ExpasionOrderGb = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.fourthComboBox = new System.Windows.Forms.ComboBox();
             this.thirdComboBox = new System.Windows.Forms.ComboBox();
@@ -56,7 +58,8 @@
             this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).BeginInit();
             this.childFormPanel.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.AlgorithmsGb.SuspendLayout();
+            this.ExpasionOrderGb.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.playerGroupB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.playerImage)).BeginInit();
@@ -176,7 +179,8 @@
             // childFormPanel
             // 
             this.childFormPanel.BackColor = System.Drawing.SystemColors.Control;
-            this.childFormPanel.Controls.Add(this.groupBox1);
+            this.childFormPanel.Controls.Add(this.AlgorithmsGb);
+            this.childFormPanel.Controls.Add(this.ExpasionOrderGb);
             this.childFormPanel.Controls.Add(this.stopBtn);
             this.childFormPanel.Controls.Add(this.playBtn);
             this.childFormPanel.Controls.Add(this.playerGroupB);
@@ -187,16 +191,36 @@
             this.childFormPanel.Size = new System.Drawing.Size(1170, 797);
             this.childFormPanel.TabIndex = 1;
             // 
-            // groupBox1
+            // AlgorithmsGb
             // 
-            this.groupBox1.Controls.Add(this.tableLayoutPanel1);
-            this.groupBox1.Font = new System.Drawing.Font("Arial Narrow", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(887, 425);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(262, 202);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Orden de expansión";
+            this.AlgorithmsGb.Controls.Add(this.AlgorithmsCb);
+            this.AlgorithmsGb.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AlgorithmsGb.Location = new System.Drawing.Point(887, 648);
+            this.AlgorithmsGb.Name = "AlgorithmsGb";
+            this.AlgorithmsGb.Size = new System.Drawing.Size(262, 115);
+            this.AlgorithmsGb.TabIndex = 5;
+            this.AlgorithmsGb.TabStop = false;
+            this.AlgorithmsGb.Text = "Algoritmos";
+            // 
+            // AlgorithmsCb
+            // 
+            this.AlgorithmsCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AlgorithmsCb.FormattingEnabled = true;
+            this.AlgorithmsCb.Location = new System.Drawing.Point(14, 51);
+            this.AlgorithmsCb.Name = "AlgorithmsCb";
+            this.AlgorithmsCb.Size = new System.Drawing.Size(232, 30);
+            this.AlgorithmsCb.TabIndex = 2;
+            // 
+            // ExpasionOrderGb
+            // 
+            this.ExpasionOrderGb.Controls.Add(this.tableLayoutPanel1);
+            this.ExpasionOrderGb.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ExpasionOrderGb.Location = new System.Drawing.Point(887, 431);
+            this.ExpasionOrderGb.Name = "ExpasionOrderGb";
+            this.ExpasionOrderGb.Size = new System.Drawing.Size(262, 202);
+            this.ExpasionOrderGb.TabIndex = 4;
+            this.ExpasionOrderGb.TabStop = false;
+            this.ExpasionOrderGb.Text = "Orden de expansión";
             // 
             // tableLayoutPanel1
             // 
@@ -218,7 +242,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(239, 169);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(249, 169);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // fourthComboBox
@@ -226,9 +250,9 @@
             this.fourthComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fourthComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fourthComboBox.FormattingEnabled = true;
-            this.fourthComboBox.Location = new System.Drawing.Point(31, 129);
+            this.fourthComboBox.Location = new System.Drawing.Point(32, 129);
             this.fourthComboBox.Name = "fourthComboBox";
-            this.fourthComboBox.Size = new System.Drawing.Size(205, 30);
+            this.fourthComboBox.Size = new System.Drawing.Size(214, 30);
             this.fourthComboBox.TabIndex = 8;
             this.fourthComboBox.SelectedIndexChanged += new System.EventHandler(this.fourthComboBox_SelectedIndexChanged);
             // 
@@ -237,9 +261,9 @@
             this.thirdComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.thirdComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.thirdComboBox.FormattingEnabled = true;
-            this.thirdComboBox.Location = new System.Drawing.Point(31, 87);
+            this.thirdComboBox.Location = new System.Drawing.Point(32, 87);
             this.thirdComboBox.Name = "thirdComboBox";
-            this.thirdComboBox.Size = new System.Drawing.Size(205, 30);
+            this.thirdComboBox.Size = new System.Drawing.Size(214, 30);
             this.thirdComboBox.TabIndex = 7;
             this.thirdComboBox.SelectedIndexChanged += new System.EventHandler(this.thirdComboBox_SelectedIndexChanged);
             // 
@@ -248,9 +272,9 @@
             this.secondComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.secondComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.secondComboBox.FormattingEnabled = true;
-            this.secondComboBox.Location = new System.Drawing.Point(31, 45);
+            this.secondComboBox.Location = new System.Drawing.Point(32, 45);
             this.secondComboBox.Name = "secondComboBox";
-            this.secondComboBox.Size = new System.Drawing.Size(205, 30);
+            this.secondComboBox.Size = new System.Drawing.Size(214, 30);
             this.secondComboBox.TabIndex = 6;
             this.secondComboBox.SelectedIndexChanged += new System.EventHandler(this.secondComboBox_SelectedIndexChanged);
             // 
@@ -260,7 +284,7 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(22, 42);
+            this.label1.Size = new System.Drawing.Size(23, 42);
             this.label1.TabIndex = 0;
             this.label1.Text = "1.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -271,7 +295,7 @@
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label2.Location = new System.Drawing.Point(3, 42);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(22, 42);
+            this.label2.Size = new System.Drawing.Size(23, 42);
             this.label2.TabIndex = 1;
             this.label2.Text = "2.";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -282,7 +306,7 @@
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label3.Location = new System.Drawing.Point(3, 84);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(22, 42);
+            this.label3.Size = new System.Drawing.Size(23, 42);
             this.label3.TabIndex = 2;
             this.label3.Text = "3.";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -293,7 +317,7 @@
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Location = new System.Drawing.Point(3, 126);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(22, 43);
+            this.label4.Size = new System.Drawing.Size(23, 43);
             this.label4.TabIndex = 3;
             this.label4.Text = "4.";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -303,9 +327,9 @@
             this.firstComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.firstComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.firstComboBox.FormattingEnabled = true;
-            this.firstComboBox.Location = new System.Drawing.Point(31, 3);
+            this.firstComboBox.Location = new System.Drawing.Point(32, 3);
             this.firstComboBox.Name = "firstComboBox";
-            this.firstComboBox.Size = new System.Drawing.Size(205, 30);
+            this.firstComboBox.Size = new System.Drawing.Size(214, 30);
             this.firstComboBox.TabIndex = 5;
             this.firstComboBox.SelectedIndexChanged += new System.EventHandler(this.firstComboBox_SelectedIndexChanged);
             // 
@@ -400,7 +424,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).EndInit();
             this.childFormPanel.ResumeLayout(false);
             this.childFormPanel.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
+            this.AlgorithmsGb.ResumeLayout(false);
+            this.ExpasionOrderGb.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.playerGroupB.ResumeLayout(false);
@@ -425,7 +450,7 @@
         public System.Windows.Forms.PictureBox playerImage;
         public System.Windows.Forms.ComboBox playerSelector;
         private System.Windows.Forms.Button stopBtn;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox ExpasionOrderGb;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         public System.Windows.Forms.ComboBox fourthComboBox;
         public System.Windows.Forms.ComboBox thirdComboBox;
@@ -435,6 +460,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         public System.Windows.Forms.ComboBox firstComboBox;
+        private System.Windows.Forms.GroupBox AlgorithmsGb;
+        public System.Windows.Forms.ComboBox AlgorithmsCb;
     }
 }
 
