@@ -44,6 +44,9 @@ namespace IA_project
         //Control para cancelar una tarea asíncrona
         private CancellationTokenSource cancelTask = new CancellationTokenSource();
 
+        //Variables para contener el árbol de búsqueda y sus derivados
+        private Tree tree;
+
         public mainWindow()
         {
             InitializeComponent();
@@ -707,7 +710,7 @@ namespace IA_project
         private void movePlayerAlgorithm(int[] coord)
         {
             //Duerme el hilo 1 segundo para ver el movimiento
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
             //Borra al jugador de la posición en la que estaba
             map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1).BackgroundImage =
@@ -727,20 +730,28 @@ namespace IA_project
         async void runDepthFirstSearchAsync(CancellationToken endTask)
         {
             await Task.Run(() => { DepthFirstSearch(endTask); });
+            drawSolutionPath();
             goalReached();
         }
 
         //Función que ejecuta el algoritmo primero en profundidad
         private void DepthFirstSearch(CancellationToken endTask)
         {
+            //Variable bandera para evitar pintar el jugador en la primera iteración
+            bool isFirstNode = true;
+
+            //Estructuras para el control de la ejecución del algoritmo
+            Stack<int[]> auxStack = new Stack<int[]>();
+            List<int[]> shownStates = new List<int[]>();
+            List<int[]> visitedStates = new List<int[]>();
+            int[] currentState;
+
+            //Estructuras para la construcción del árbol
+            Node node = new Node(startCoord, null);
+            Tree tree = new Tree(node);
+
             try
             {
-                bool isFirstNode = true;
-                Stack<int[]> auxStack = new Stack<int[]>();
-                List<int[]> shownCoords = new List<int[]>();
-                List<int[]> visitedNodes = new List<int[]>();
-                int[] currentState;
-
                 auxStack.Push(startCoord);
                 while (auxStack.Count != 0)
                 {
@@ -758,21 +769,23 @@ namespace IA_project
 
                     if (currentCoord.SequenceEqual(goalCoord))
                     {
+                        this.tree = tree;
                         return;
                     }
 
-                    if (!visitedNodes.Any(x => x.SequenceEqual(currentState)))
+                    if (!visitedStates.Any(x => x.SequenceEqual(currentState)))
                     {
                         List<int[]> statesList = getStates(currentState);
-                        shownCoords.Add(currentState);
-                        visitedNodes.Add(currentState);
+                        shownStates.Add(currentState);
+                        visitedStates.Add(currentState);
+                        node = tree.retrieveNode(currentState);
                         foreach (int[] state in statesList)
                         {
-                            if (!shownCoords.Any(x => x.SequenceEqual(state)))
+                            if (!shownStates.Any(x => x.SequenceEqual(state)))
                             {
                                 auxStack.Push(state);
-                                shownCoords.Add(state);
-                                Debug.WriteLine(state[0] + ":" + state[1]);
+                                shownStates.Add(state);
+                                node.ChildNodes.Add(new Node(state, node));
                             }
                         }
                     }
@@ -848,6 +861,19 @@ namespace IA_project
                 }
             }
             return statesList;
+        }
+
+        private void drawSolutionPath()
+        {
+            Node node = tree.retrieveNode(goalCoord);
+
+            while (!startCoord.SequenceEqual(node.Coord))
+            {
+                map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1).BackColor = Color.Red;
+                node = node.Parent;
+            }
+
+            map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1).BackColor = Color.Red;
         }
 
         #endregion

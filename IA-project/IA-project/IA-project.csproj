@@ -67,6 +67,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Terrain.cs" />
+    <Compile Include="TreeNode.cs" />
     <EmbeddedResource Include="Character.resx">
       <DependentUpon>Character.cs</DependentUpon>
     </EmbeddedResource>
