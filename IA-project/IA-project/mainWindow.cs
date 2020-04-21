@@ -34,6 +34,7 @@ namespace IA_project
         public bool playersConfigured = false;
         private bool initialStateSet = false;
         private bool finalStateSet = false;
+        private bool cancelledTask = false;
 
         //Variable contadora de visitas
         private int visitNumber;
@@ -44,8 +45,8 @@ namespace IA_project
         //Control para cancelar una tarea asíncrona
         private CancellationTokenSource cancelTask = new CancellationTokenSource();
 
-        //Variables para contener el árbol de búsqueda y sus derivados
-        private Tree tree;
+        //Variable para almacenar el árbol de búsqueda
+        public Tree tree;
 
         public mainWindow()
         {
@@ -68,7 +69,7 @@ namespace IA_project
             initializeComboBoxes();
             initializeAlgorithmsCb();
 
-            //Permita que se puedan actualizar los controles en hilos diferentes del principal
+            //Permite que se puedan actualizar los controles en hilos diferentes del principal
             CheckForIllegalCrossThreadCalls = false;
 
             //Eliminar llamada a función al terminar el programa
@@ -444,8 +445,8 @@ namespace IA_project
             }
         }
 
-        //Evento de botón Detener
-        private void stopBtn_Click(object sender, EventArgs e)
+        //Función para reiniciar los controles necesarios
+        private void stopConfig()
         {
             gameStarted = false;
             initialStateSet = false;
@@ -459,14 +460,22 @@ namespace IA_project
             ExpasionOrderGb.Enabled = true;
             AlgorithmsGb.Enabled = true;
             visitNumber = 1;
+
+            MessageBox.Show(this, "Juego detenido", "Gameover",
+                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        //Evento de botón Detener
+        private void stopBtn_Click(object sender, EventArgs e)
+        {
             //Si el combobox es diferente de cero (algoritmo seleccionado), se para el evento asíncrono
             if (AlgorithmsCb.SelectedIndex != 0 && cancelTask != null)
             {
+                cancelledTask = true;
                 cancelTask.Cancel();
+                return;
             }
-
-            MessageBox.Show(this, "Juego detenido", "Gameover",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            stopConfig();
             resetMap();
             loadMap();
         }
@@ -484,8 +493,17 @@ namespace IA_project
         {
             if(currentCoord.SequenceEqual(goalCoord))
             {
-                MessageBox.Show(this, "Meta alcanzada", "Gameover",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if(AlgorithmsCb.SelectedIndex == 0)
+                {
+                    MessageBox.Show(this, "Meta alcanzada", "Gameover",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    TreeWindow treeWindow = new TreeWindow(this);
+                    treeWindow.Show();
+                    return;
+                }
                 gameStarted = false;
                 stopBtn.Enabled = false;
                 configMapBtn.Enabled = true;
@@ -710,7 +728,7 @@ namespace IA_project
         private void movePlayerAlgorithm(int[] coord)
         {
             //Duerme el hilo 1 segundo para ver el movimiento
-            Thread.Sleep(500);
+            Thread.Sleep(200);
 
             //Borra al jugador de la posición en la que estaba
             map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1).BackgroundImage =
@@ -730,8 +748,33 @@ namespace IA_project
         async void runDepthFirstSearchAsync(CancellationToken endTask)
         {
             await Task.Run(() => { DepthFirstSearch(endTask); });
+            stopBtn.Enabled = false;
             drawSolutionPath();
             goalReached();
+            if (cancelledTask)
+            {
+                cancelledTask = false;
+                resetMap();
+                loadMap();
+            }
+            initializeComboBoxes();
+        }
+
+        //Función para reiniciar los controles cuando se alcanzó la meta con un algoritmo
+        public void goalReachedAlgorithm()
+        {
+            gameStarted = false;
+            stopBtn.Enabled = false;
+            configMapBtn.Enabled = true;
+            configPlayerBtn.Enabled = true;
+            howToPlayBtn.Enabled = true;
+            playerSelector.Enabled = true;
+            resetButton.Enabled = true;
+            ExpasionOrderGb.Enabled = true;
+            AlgorithmsGb.Enabled = true;
+            visitNumber = 1;
+            resetMap();
+            loadMap();
         }
 
         //Función que ejecuta el algoritmo primero en profundidad
@@ -742,8 +785,8 @@ namespace IA_project
 
             //Estructuras para el control de la ejecución del algoritmo
             Stack<int[]> auxStack = new Stack<int[]>();
-            List<int[]> shownStates = new List<int[]>();
-            List<int[]> visitedStates = new List<int[]>();
+            List<int[]> expandedNodes = new List<int[]>();
+            List<int[]> visitedNodes = new List<int[]>();
             int[] currentState;
 
             //Estructuras para la construcción del árbol
@@ -769,22 +812,25 @@ namespace IA_project
 
                     if (currentCoord.SequenceEqual(goalCoord))
                     {
+                        node = tree.retrieveNode(currentState);
+                        node.setData(visitNumber);
                         this.tree = tree;
                         return;
                     }
 
-                    if (!visitedStates.Any(x => x.SequenceEqual(currentState)))
+                    if (!visitedNodes.Any(x => x.SequenceEqual(currentState)))
                     {
-                        List<int[]> statesList = getStates(currentState);
-                        shownStates.Add(currentState);
-                        visitedStates.Add(currentState);
+                        List<int[]> statesList = getNodes(currentState);
+                        expandedNodes.Add(currentState);
+                        visitedNodes.Add(currentState);
                         node = tree.retrieveNode(currentState);
+                        node.setData(visitNumber);
                         foreach (int[] state in statesList)
                         {
-                            if (!shownStates.Any(x => x.SequenceEqual(state)))
+                            if (!expandedNodes.Any(x => x.SequenceEqual(state)))
                             {
                                 auxStack.Push(state);
-                                shownStates.Add(state);
+                                expandedNodes.Add(state);
                                 node.ChildNodes.Add(new Node(state, node));
                             }
                         }
@@ -792,12 +838,15 @@ namespace IA_project
                 }
             } catch (TaskCanceledException msg)
             {
+                cancelTask.Dispose();
+                cancelTask = new CancellationTokenSource();
+                stopConfig();
                 Debug.WriteLine(msg);
             }
         }
 
-        //Obtiene los estados (coordenadas) a los que se puede mover el jugador de acuerdo al orden de expansión
-        private List<int[]> getStates(int[] coord) 
+        //Obtiene los nodos (coordenadas) a los que se puede mover el jugador de acuerdo al orden de expansión
+        private List<int[]> getNodes(int[] coord) 
         {
             List<int[]> statesList = new List<int[]>();
 
@@ -863,17 +912,23 @@ namespace IA_project
             return statesList;
         }
 
+        //Método para pintar los espacios del laberinto que pertenecen al camino a la solución
         private void drawSolutionPath()
         {
-            Node node = tree.retrieveNode(goalCoord);
-
-            while (!startCoord.SequenceEqual(node.Coord))
+            if (tree != null)
             {
-                map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1).BackColor = Color.Red;
-                node = node.Parent;
-            }
+                Node node = tree.retrieveNode(goalCoord);
 
-            map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1).BackColor = Color.Red;
+                while (!startCoord.SequenceEqual(node.Coord))
+                {
+                    map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1).BackColor = Color.Red;
+                    node.BackgroundBrush = Brushes.LightBlue;
+                    node = node.Parent;
+                }
+
+                map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1).BackColor = Color.Red;
+                node.BackgroundBrush = Brushes.LightBlue;
+            }
         }
 
         #endregion
