@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IA_project
 {
@@ -94,7 +92,7 @@ namespace IA_project
         public Tree(Node root)
         {
             this.root = root;
-            nodeTextFont = new Font("Arial", 10);
+            nodeTextFont = new Font("Arial", 9);
         }
 
         //Método interfaz para invocar el método searchNode

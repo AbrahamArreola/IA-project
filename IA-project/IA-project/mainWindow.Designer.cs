@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuPanel = new System.Windows.Forms.Panel();
             this.howToPlayBtn = new System.Windows.Forms.Button();
             this.buttonPanel = new System.Windows.Forms.Panel();
@@ -54,6 +55,7 @@
             this.playerSelector = new System.Windows.Forms.ComboBox();
             this.playerImage = new System.Windows.Forms.PictureBox();
             this.map = new System.Windows.Forms.TableLayoutPanel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuPanel.SuspendLayout();
             this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).BeginInit();
@@ -406,6 +408,11 @@
             this.map.Size = new System.Drawing.Size(827, 750);
             this.map.TabIndex = 0;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 300;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -462,6 +469,7 @@
         public System.Windows.Forms.ComboBox firstComboBox;
         private System.Windows.Forms.GroupBox AlgorithmsGb;
         public System.Windows.Forms.ComboBox AlgorithmsCb;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
