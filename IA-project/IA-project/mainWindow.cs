@@ -50,6 +50,7 @@ namespace IA_project
         public Tree tree;
         public Node node;
 
+
         public mainWindow()
         {
             InitializeComponent();
@@ -428,6 +429,8 @@ namespace IA_project
             AlgorithmsGb.Enabled = false;
             currentCoord = startCoord;
 
+            maskMapInit();
+
             switch (AlgorithmsCb.SelectedIndex)
             {
                 //Caso 0 = Mover con teclas
@@ -547,6 +550,9 @@ namespace IA_project
 
             drawPlayer(((Panel)map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1)),
                             playerImage.Image);
+
+            //does the cross when the character moves
+            makeCross(currentCoord);
 
             map.GetControlFromPosition(currentCoord[1] + 1, currentCoord[0] + 1).Controls[1].Text +=
                 string.Format("{0},", ++visitNumber);
@@ -688,7 +694,7 @@ namespace IA_project
         private void initializeToPlay()
         {
             //Cargar terrenos
-            fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm.txt";
+            fileRoute = "D:\\Arturo\\Documents\\Escuela\\8vo semestre\\IA 1\\Mapas\\map2.txt";
 
             Dictionary<int, Terrain> terrains = new Dictionary<int, Terrain>();
 
@@ -747,6 +753,9 @@ namespace IA_project
             //Pinta al jugador en la nueva posición dada
             drawPlayer(((Panel)map.GetControlFromPosition(coord[1] + 1, coord[0] + 1)), playerImage.Image);
 
+
+            makeCross(coord);
+
             //Actualiza el contador de visitas en la nueva posición
             map.GetControlFromPosition(coord[1] + 1, coord[0] + 1).Controls[1].Text +=
                 string.Format("{0},", ++visitNumber);
@@ -772,6 +781,7 @@ namespace IA_project
             if (!currentNode.SequenceEqual(startCoord))
             {
                 movePlayerAlgorithm(currentNode);
+                
             }
             if (currentCoord.SequenceEqual(goalCoord))
             {
@@ -925,25 +935,73 @@ namespace IA_project
 
         #region maskMap
 
-        private void maskMap()
+        private void maskMapInit()
         {
-            Bitmap bmp = new Bitmap(100, 100);
-            using (Graphics gfx = Graphics.FromImage(bmp))
-            {
-                using (SolidBrush brush = new SolidBrush(Color.FromArgb(0, 0, 0)))
-                {
-                    gfx.FillRectangle(brush, 0, 0, 100, 100);
-                }
-            }
+            int[] coordinateToAvoid = new int[2];
+
+            //Bitmap brush = getBrush(_colorsOfBrush.Black);
 
             for (int i = 1; i < matrixPosition.GetLength(0) + 1; i++)
             {
                 for (int j = 1; j < matrixPosition.GetLength(1) + 1; j++)
                 {
-                    map.GetControlFromPosition(j, i).BackgroundImage = bmp;
+                    coordinateToAvoid[0] = i - 1;
+                    coordinateToAvoid[1] = j - 1;
+
+                    // if the coordinate is not the origin nor the goal
+                    if (!coordinateToAvoid.SequenceEqual(goalCoord) &&
+                        !coordinateToAvoid.SequenceEqual(startCoord))
+                    {
+                        map.GetControlFromPosition(j, i).BackgroundImage = setOpacity(map.GetControlFromPosition(j, i).BackgroundImage, Convert.ToSingle(0.1));
+                    }
                 }
             }
+
+            makeCross(startCoord);
         }
+
+        
+
+        private void paintTileNormal(Control tileOfMap, int[] coordinates)
+        {
+
+            if (tileOfMap != null)
+            {
+                if(tileOfMap.BackgroundImage != null)
+                {
+                    tileOfMap.BackgroundImage =
+                    setOpacity(matrixPosition[coordinates[1]-1, coordinates[0]-1].Image, Convert.ToSingle(0.6));
+                }               
+            }
+        }
+
+        private void makeCross(int [] coordinateToGet )
+        {
+            // up of character
+            var tile = map.GetControlFromPosition(coordinateToGet[1] + 1, coordinateToGet[0]);
+            int[] coordinates = { coordinateToGet[1] + 1, coordinateToGet[0] };
+            paintTileNormal(tile, coordinates);
+
+
+            //left of initial Cordinate
+            tile = map.GetControlFromPosition(coordinateToGet[1], coordinateToGet[0] + 1);
+            coordinates[0] = coordinateToGet[1];
+            coordinates[1] = coordinateToGet[0] + 1;
+            paintTileNormal(tile, coordinates);
+
+            //down of initial Cordinate
+            tile = map.GetControlFromPosition(coordinateToGet[1] + 1, coordinateToGet[0] + 2);
+            coordinates[0] = coordinateToGet[1] + 1;
+            coordinates[1] = coordinateToGet[0] + 2;
+            paintTileNormal(tile, coordinates);
+
+            //right of initial Cordinate
+            tile = map.GetControlFromPosition(coordinateToGet[1] + 2, coordinateToGet[0] + 1);
+            coordinates[0] = coordinateToGet[1] + 2;
+            coordinates[1] = coordinateToGet[0] + 1;
+            paintTileNormal(tile, coordinates);
+        }
+
 
         #endregion
     }
