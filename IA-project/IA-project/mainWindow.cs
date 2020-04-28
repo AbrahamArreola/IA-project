@@ -39,6 +39,7 @@ namespace IA_project
 
         //Lista de ComboBoxes de orden de expansión
         private List<ComboBox> comboBoxValues = new List<ComboBox>();
+        private List<int> comboBoxOrder;
 
         //Estructuras para el control de la ejecución del algoritmo
         Stack<int[]> auxStack = new Stack<int[]>();
@@ -72,8 +73,8 @@ namespace IA_project
             initializeComboBoxes();
             initializeAlgorithmsCb();
 
-            //Eliminar llamada a función al finalizar la codificación del programa
-            initializeToPlay();
+            //Función para testear el programa
+            //initializeToPlay();
         }
 
         #region configPlayer
@@ -665,17 +666,17 @@ namespace IA_project
 
         private void fourthComboBox_SelectedIndexChanged(object sender, EventArgs e) { swapItems((ComboBox)sender); }
 
-        //Ordena los comboBoxes para poder decretar el orden de expansión
+        //Guarda en una lista el orden de los comboBoxes para poder decretar el orden de expansión
         private void sortComboBoxes()
         {
-            List<ComboBox> tempComboBoxList = new List<ComboBox>();
+            List<int> tempComboBoxList = new List<int>();
 
-            tempComboBoxList.Add(comboBoxValues.Find(x => x == firstComboBox));
-            tempComboBoxList.Add(comboBoxValues.Find(x => x == secondComboBox));
-            tempComboBoxList.Add(comboBoxValues.Find(x => x == thirdComboBox));
-            tempComboBoxList.Add(comboBoxValues.Find(x => x == fourthComboBox));
+            tempComboBoxList.Add(firstComboBox.SelectedIndex);
+            tempComboBoxList.Add(secondComboBox.SelectedIndex);
+            tempComboBoxList.Add(thirdComboBox.SelectedIndex);
+            tempComboBoxList.Add(fourthComboBox.SelectedIndex);
 
-            comboBoxValues = tempComboBoxList;
+            comboBoxOrder = tempComboBoxList;
         }
 
         #endregion
@@ -694,7 +695,8 @@ namespace IA_project
         private void initializeToPlay()
         {
             //Cargar terrenos
-            fileRoute = "D:\\Arturo\\Documents\\Escuela\\8vo semestre\\IA 1\\Mapas\\map2.txt";
+            fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm.txt";
+            //fileRoute = "D:\\Arturo\\Documents\\Escuela\\8vo semestre\\IA 1\\Mapas\\map2.txt";
 
             Dictionary<int, Terrain> terrains = new Dictionary<int, Terrain>();
 
@@ -790,7 +792,7 @@ namespace IA_project
                 node.setData(visitNumber);
 
                 //Reinicia lo necesario para finalizar con la ejecución del algoritmo
-                AlgorithmEnd();
+                AlgorithmEnds();
                 return;
             }
 
@@ -814,13 +816,12 @@ namespace IA_project
         }
 
         //Reinicia lo necesario para finalizar con la ejecución del algoritmo
-        private void AlgorithmEnd()
+        private void AlgorithmEnds()
         {
             timer1.Stop();              //Se detiene el timer para que pare el algoritmo
             stopBtn.Enabled = false;    //Se deshabilita el boton de detener
             drawSolutionPath();         //Se pinta el camino a la solución en el mapa
-            goalReached();          
-            initializeComboBoxes();     //Se reinician los comboboxes de orden de expansión
+            goalReached();
 
             //Limpiando estructuras de control
             auxStack.Clear();
@@ -850,11 +851,11 @@ namespace IA_project
         {
             List<int[]> statesList = new List<int[]>();
 
-            //Itera sobre la lista de comboBoxes y saca su index que corresponde a una posición
-            foreach (ComboBox comboBox in comboBoxValues)
+            //Itera sobre la lista ordenada de indices que corresponde a una posición
+            foreach (int position in comboBoxOrder)
             {
                 int[] tempCoord = (int[])coord.Clone();
-                switch (comboBox.SelectedIndex)
+                switch (position)
                 {
                     //Obtener posición arriba
                     case 0:
@@ -939,8 +940,6 @@ namespace IA_project
         {
             int[] coordinateToAvoid = new int[2];
 
-            //Bitmap brush = getBrush(_colorsOfBrush.Black);
-
             for (int i = 1; i < matrixPosition.GetLength(0) + 1; i++)
             {
                 for (int j = 1; j < matrixPosition.GetLength(1) + 1; j++)
@@ -952,15 +951,14 @@ namespace IA_project
                     if (!coordinateToAvoid.SequenceEqual(goalCoord) &&
                         !coordinateToAvoid.SequenceEqual(startCoord))
                     {
-                        map.GetControlFromPosition(j, i).BackgroundImage = setOpacity(map.GetControlFromPosition(j, i).BackgroundImage, Convert.ToSingle(0.1));
+                        map.GetControlFromPosition(j, i).BackgroundImage = 
+                            setOpacity(map.GetControlFromPosition(j, i).BackgroundImage, Convert.ToSingle(0));
                     }
                 }
             }
 
             makeCross(startCoord);
         }
-
-        
 
         private void paintTileNormal(Control tileOfMap, int[] coordinates)
         {

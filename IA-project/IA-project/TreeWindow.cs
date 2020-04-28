@@ -28,7 +28,7 @@ namespace IA_project
             SystemSounds.Exclamation.Play();
             mainForm = main;
             tree = main.tree;
-            panel1.Size = new Size(7000, 7000);
+            panel1.Size = new Size(7000, 9000);
         }
 
         //Manda a llamar las funciones recursivas que se encargan de pintar el árbol
