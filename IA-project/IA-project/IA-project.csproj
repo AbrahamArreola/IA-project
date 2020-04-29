@@ -127,5 +127,8 @@
   <ItemGroup>
     <None Include="Resources\qmark_sign.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pickaxe.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

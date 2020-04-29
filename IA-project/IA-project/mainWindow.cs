@@ -919,17 +919,31 @@ namespace IA_project
             if (tree != null)
             {
                 Node node = tree.retrieveNode(goalCoord);
-
-                while (!startCoord.SequenceEqual(node.Coord))
-                {
-                    map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1).BackColor = Color.Red;
-                    node.BackgroundBrush = Brushes.LightBlue;
-                    node = node.Parent;
-                }
-
-                map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1).BackColor = Color.Red;
                 node.BackgroundBrush = Brushes.LightBlue;
+
+                while (node != null)
+                {
+                    node = node.Parent;
+                    if(node != null)
+                    {
+                        drawImagePath((Panel)map.GetControlFromPosition(node.Coord[1] + 1, node.Coord[0] + 1), 
+                            Properties.Resources.pickaxe);
+                        node.BackgroundBrush = Brushes.LightBlue;
+                    }
+                }
             }
+        }
+
+        //Función para pintar imagen de camino solución en un panel
+        private void drawImagePath(Panel containerPanel, Image image)
+        {
+            Bitmap bm1 = new Bitmap(containerPanel.BackgroundImage);
+            Bitmap bm2 = new Bitmap(setOpacity(image, Convert.ToSingle(0.7)));
+            Bitmap finalImage = new Bitmap(bm1.Width, bm1.Height);
+            Graphics gf = Graphics.FromImage(finalImage);
+            gf.DrawImage(bm1, new Rectangle(0, 0, bm1.Width, bm1.Height));
+            gf.DrawImage(bm2, new Rectangle(0, 0, bm1.Width, bm1.Height));
+            containerPanel.BackgroundImage = finalImage;
         }
 
         #endregion

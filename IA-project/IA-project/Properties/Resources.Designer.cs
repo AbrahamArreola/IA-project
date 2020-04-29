@@ -103,6 +103,16 @@ namespace IA_project.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap pickaxe {
+            get {
+                object obj = ResourceManager.GetObject("pickaxe", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap qmark_sign {
             get {
                 object obj = ResourceManager.GetObject("qmark_sign", resourceCulture);
