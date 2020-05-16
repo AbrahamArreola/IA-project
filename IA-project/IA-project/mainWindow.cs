@@ -52,6 +52,13 @@ namespace IA_project
         public Node node;
 
 
+        private Dictionary<int[], double> dictionaryOfEuclidiansPosition = new Dictionary<int[], double>();
+        private Dictionary<int[], double> dictionaryOfEuclidiansCoordenates = new Dictionary<int[], double>();
+
+        private Dictionary<int[], double> dictionaryOfManhattanPosition = new Dictionary<int[], double>();
+        private Dictionary<int[], double> dictionaryOfManhattanCoordenates = new Dictionary<int[], double>();
+
+
         public mainWindow()
         {
             InitializeComponent();
@@ -74,7 +81,7 @@ namespace IA_project
             initializeAlgorithmsCb();
 
             //Función para testear el programa
-            //initializeToPlay();
+            initializeToPlay();
         }
 
         #region configPlayer
@@ -432,6 +439,10 @@ namespace IA_project
 
             maskMapInit();
 
+            // make a selection of distance choosen here
+            distancesByEuclidianMedition();
+           
+
             switch (AlgorithmsCb.SelectedIndex)
             {
                 //Caso 0 = Mover con teclas
@@ -695,8 +706,8 @@ namespace IA_project
         private void initializeToPlay()
         {
             //Cargar terrenos
-            fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm.txt";
-            //fileRoute = "D:\\Arturo\\Documents\\Escuela\\8vo semestre\\IA 1\\Mapas\\map2.txt";
+            //fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm.txt";
+            fileRoute = "D:\\Arturo\\Documents\\Escuela\\8vo semestre\\IA 1\\Mapas\\map2.txt";
 
             Dictionary<int, Terrain> terrains = new Dictionary<int, Terrain>();
 
@@ -1014,6 +1025,171 @@ namespace IA_project
             paintTileNormal(tile, coordinates);
         }
 
+
+        #endregion
+
+
+        #region Distances
+
+
+        private void euclidianDistancewithPosition(Control tileOfMap, int[] coordenates)
+        {
+            Control end = map.GetControlFromPosition(goalCoord[1]+1,goalCoord[0]+1);
+
+            var current = tileOfMap.Location;
+            var secondLocation = end.Location;
+
+
+            double x1, x2, y2, y1;
+
+            x1 = current.X;
+            y1 = current.Y;
+
+            x2 = secondLocation.X;
+            y2 = secondLocation.Y;
+
+            double xSquares = (x2 - x1);
+            xSquares = Math.Pow(xSquares, 2);
+
+            double YSquares = (y2 - y1);
+            YSquares = Math.Pow(YSquares, 2);
+
+            double sumSquares = xSquares + YSquares;
+
+            sumSquares = Math.Sqrt(sumSquares);
+
+          //  listOfDistancesEuclidians.Add(sumSquares);
+            dictionaryOfEuclidiansPosition.Add(coordenates, sumSquares);
+
+        }
+
+        private void euclidianDistanceWithCoordenates(int[] coordenates)
+        {
+
+            double x1, x2, y2, y1;
+
+            //row
+            x1 = coordenates[0];
+            //column
+            y1 = coordenates[1];
+
+            // row
+            x2 = goalCoord[0]+1;
+            //column
+            y2 = goalCoord[1]+1;
+
+            double xSquares = (x2 - x1);
+            xSquares = Math.Pow(xSquares, 2);
+
+            double YSquares = (y2 - y1);
+            YSquares = Math.Pow(YSquares, 2);
+
+            double sumSquares = xSquares + YSquares;
+
+            sumSquares = Math.Sqrt(sumSquares);
+
+            dictionaryOfEuclidiansCoordenates.Add(coordenates, sumSquares);
+        }
+
+        private void manhattanDistanceWithCoordenates(int[] coordenates)
+        {
+
+            double x1, x2, y2, y1;
+
+            //row
+            x1 = coordenates[0];
+            //column
+            y1 = coordenates[1];
+
+            // row
+            x2 = goalCoord[0] + 1;
+            //column
+            y2 = goalCoord[1] + 1;
+
+            double xAbs = (x1 - x2);
+            xAbs = Math.Abs(xAbs);
+
+            double yAbs = (y1 - y2);
+            yAbs = Math.Abs(yAbs);
+
+            double sumAbsolutes = xAbs + yAbs;
+
+
+            dictionaryOfManhattanCoordenates.Add(coordenates, sumAbsolutes);
+        }
+
+        private void manhattanDistancewithPosition(Control tileOfMap, int[] coordenates)
+        {
+            Control end = map.GetControlFromPosition(goalCoord[1] + 1, goalCoord[0] + 1);
+
+            var current = tileOfMap.Location;
+            var secondLocation = end.Location;
+
+
+            double x1, x2, y2, y1;
+
+            x1 = current.X;
+            y1 = current.Y;
+
+            x2 = secondLocation.X;
+            y2 = secondLocation.Y;
+
+            double xAbs = (x1 - x2);
+            xAbs = Math.Abs(xAbs);
+
+            double yAbs = (y1 - y2);
+            yAbs = Math.Abs(yAbs);
+
+            double sumAbsolutes = xAbs + yAbs;
+
+
+            dictionaryOfManhattanPosition.Add(coordenates, sumAbsolutes);
+
+        }
+
+
+
+
+        private void distancesByEuclidianMedition()
+        {
+
+            int rows = matrixPosition.GetLength(0);
+            int columns = matrixPosition.GetLength(1);
+
+            int column, row;
+            int[] positions;
+           // int[] positions2;
+
+            for (int i = 1; i <= rows; i++)
+            {
+                for (int j = 1; j <= columns; j++)
+                {
+               
+                    var tile = map.GetControlFromPosition(j, i);
+
+                    column = j;
+                    row = i;
+
+                    // to avoid alteration of references
+                    positions = new int[2] { row, column };
+
+                    // just for test, remove at last
+                    if(j == 4 && i == 6)
+                    {
+                        tile.BackgroundImage = Properties.Resources.pickaxe;
+                    }
+
+                    // column // row
+
+                    euclidianDistancewithPosition(tile, positions); // the one with location
+                    euclidianDistanceWithCoordenates(positions); // the one with coordenates
+
+                    manhattanDistanceWithCoordenates(positions);
+                    manhattanDistancewithPosition(tile, positions);
+                }
+            }
+
+        }
 
         #endregion
     }
