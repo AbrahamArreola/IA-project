@@ -448,7 +448,7 @@ namespace IA_project
             // make a selection of distance choosen here
             distancesByEuclidianMedition();
            
-            switch (AlgorithmsCb.SelectedIndex)
+            //switch (AlgorithmsCb.SelectedIndex
             
             if(AlgorithmsCb.SelectedIndex == 0)
             {
@@ -482,6 +482,7 @@ namespace IA_project
                 //Continua con la ejecución del algoritmo
                 timer1.Start();
             }
+
         }
 
         //Función para reiniciar los controles necesarios
