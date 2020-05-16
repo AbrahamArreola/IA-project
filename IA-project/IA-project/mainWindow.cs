@@ -447,9 +447,6 @@ namespace IA_project
 
             // make a selection of distance choosen here
             distancesByEuclidianMedition();
-           
-
-            switch (AlgorithmsCb.SelectedIndex)
             
             if(AlgorithmsCb.SelectedIndex == 0)
             {
@@ -1120,9 +1117,7 @@ namespace IA_project
 
         #endregion
 
-
         #region Distances
-
 
         private void euclidianDistancewithPosition(Control tileOfMap, int[] coordenates)
         {
@@ -1238,9 +1233,6 @@ namespace IA_project
             dictionaryOfManhattanPosition.Add(coordenates, sumAbsolutes);
 
         }
-
-
-
 
         private void distancesByEuclidianMedition()
         {
