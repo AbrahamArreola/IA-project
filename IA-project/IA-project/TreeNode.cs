@@ -12,7 +12,7 @@ namespace IA_project
         private Node parent;
         private List<Node> childNodes;
         private int visitNumber;
-        private double terrainCost;
+        private decimal terrainCost;
 
         //Información que se mostrará en el nodo pintado
         private string stringData;
@@ -34,10 +34,20 @@ namespace IA_project
             backgroundBrush = Brushes.White;
 
             //Inicializa la información que mostrará el nodo sin el número de visita
+            setStringData();
+            nodePosition = new PointF(0, 0);
+        }
+
+        public Node(int[] coord, Node parent, decimal terrainCost) : this(coord, parent)
+        {
+            this.terrainCost = terrainCost;
+            setStringData();
+        }
+
+        public void setStringData()
+        {
             stringData = String.Format("({0},{1})\n{2}", (char)(coord[1] + 65),
                 coord[0] + 1, terrainCost);
-
-            nodePosition = new PointF(0, 0);
         }
 
         //Se agrega el número de visita y se actualiza la información mostrará el nodo
@@ -61,6 +71,7 @@ namespace IA_project
         public string StringData { get => stringData; set => stringData = value; }
         public PointF NodePosition { get => nodePosition; set => nodePosition = value; }
         public Brush BackgroundBrush { get => backgroundBrush; set => backgroundBrush = value; }
+        public decimal TerrainCost { get => terrainCost; set => terrainCost = value; }
     }
 
     public class Tree

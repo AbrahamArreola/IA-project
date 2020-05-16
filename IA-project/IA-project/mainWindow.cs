@@ -41,11 +41,17 @@ namespace IA_project
         private List<ComboBox> comboBoxValues = new List<ComboBox>();
         private List<int> comboBoxOrder;
 
-        //Estructuras para el control de la ejecución del algoritmo
+        //Estructuras para el control de la ejecución de algoritmos ciegos
         Stack<int[]> auxStack = new Stack<int[]>();
         List<int[]> expandedNodes = new List<int[]>();
         List<int[]> visitedNodes = new List<int[]>();
         int[] currentNode;
+
+        //Estructuras para el control de la ejecución de alogoritmos heurísticos
+        PriorityQueue priorityQueue = new PriorityQueue();
+        List<MapPosition> expandedNodesh = new List<MapPosition>();
+        List<MapPosition> visitedNodesh = new List<MapPosition>();
+        MapPosition currentNodeh;
 
         //Clases para la construcción del árbol de expansión
         public Tree tree;
@@ -74,7 +80,7 @@ namespace IA_project
             initializeAlgorithmsCb();
 
             //Función para testear el programa
-            //initializeToPlay();
+            initializeToPlay();
         }
 
         #region configPlayer
@@ -432,31 +438,37 @@ namespace IA_project
 
             maskMapInit();
 
-            switch (AlgorithmsCb.SelectedIndex)
+            if(AlgorithmsCb.SelectedIndex == 0)
             {
-                //Caso 0 = Mover con teclas
-                case 0:
-                    gameStarted = true;
-                    Focus();
-                    break;
+                gameStarted = true;
+                Focus();
+            }
+            else
+            {
+                gameStartedAlgorithm = true;
+                //Ordena los comboBoxes de orden de expansión
+                sortComboBoxes();
 
-                //Caso 1 = Algoritmo primero en profundidad
-                case 1:
-                    gameStartedAlgorithm = true;
-                    //Ordena los comboBoxes de orden de expansión
-                    sortComboBoxes();
+                //Inicializa el árbol
+                node = new Node(startCoord, null);
+                tree = new Tree(node);
 
-                    //Inicializa el árbol
-                    node = new Node(startCoord, null);
-                    tree = new Tree(node);
+                switch (AlgorithmsCb.SelectedIndex)
+                {
+                    //Caso 1 = Algoritmo primero en profundidad
+                    case 1:
+                        auxStack.Push(startCoord);
+                        depthFirstSearch();
+                        break;
 
-                    //Inicializa el algoritmo
-                    auxStack.Push(startCoord);
-                    depthFirstSearch();
+                    case 2:
+                        currentNodeh = new MapPosition(startCoord, 0);
+                        priorityQueue.Enqueue(currentNodeh);
+                        break;
+                }
 
-                    //Continua con la ejecución del algoritmo
-                    timer1.Start();
-                    break;
+                //Continua con la ejecución del algoritmo
+                timer1.Start();
             }
         }
 
@@ -491,6 +503,9 @@ namespace IA_project
                 auxStack.Clear();
                 expandedNodes.Clear();
                 visitedNodes.Clear();
+                priorityQueue.Clear();
+                expandedNodesh.Clear();
+                visitedNodesh.Clear();
             }
             stopConfig();
             resetMap();
@@ -686,7 +701,7 @@ namespace IA_project
         //Inicializa el comboBox para seleccionar si jugar con teclas o ejecutar algún algoritmo
         private void initializeAlgorithmsCb()
         {
-            string[] Algorithms = { "Mover con teclas", "Profundidad" };
+            string[] Algorithms = { "Mover con teclas", "Profundidad", "Costo uniforme" };
 
             AlgorithmsCb.DataSource = Algorithms;
         }
@@ -695,7 +710,7 @@ namespace IA_project
         private void initializeToPlay()
         {
             //Cargar terrenos
-            fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm.txt";
+            fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm2.txt";
             //fileRoute = "D:\\Arturo\\Documents\\Escuela\\8vo semestre\\IA 1\\Mapas\\map2.txt";
 
             Dictionary<int, Terrain> terrains = new Dictionary<int, Terrain>();
@@ -704,7 +719,7 @@ namespace IA_project
             string imagesPath = string.Format("{0}Resources\\terrain_images",
                                 Path.GetFullPath(Path.Combine(absolutePath, @"..\..\")));
 
-            for (int i = 1; i <= 2; i++)
+            for (int i = 1; i <= 4; i++)
             {
                 Terrain terrain = new Terrain
                 {
@@ -734,7 +749,7 @@ namespace IA_project
                     Image = Image.FromFile(paths[i]),
                     MovilityOfCharacter = new Dictionary<int, decimal>
                     {
-                        {1,1}, {2,-1}
+                        {1, 2}, {2, 4}, {3, 6}, {4, 8}
                     }
                 };
                 characters.Add(character);
@@ -773,6 +788,78 @@ namespace IA_project
                 case 1:
                     depthFirstSearch();
                     break;
+
+                case 2:
+                    uniformCostSearch();
+                    break;
+            }
+        }
+
+        //Algoritmo costo uniforme
+        private void uniformCostSearch()
+        {
+            currentNodeh = priorityQueue.Dequeue();
+            decimal currentCost = currentNodeh.Cost;
+            if (!currentNodeh.Coord.SequenceEqual(startCoord))
+            {
+                movePlayerAlgorithm(currentNodeh.Coord);
+            }
+            if (currentCoord.SequenceEqual(goalCoord))
+            {
+                //Agrega última visita al nodo destino
+                node = tree.retrieveNode(currentNodeh.Coord);
+                node.setData(visitNumber);
+
+                //Reinicia lo necesario para finalizar con la ejecución del algoritmo
+                AlgorithmEnds();
+                return;
+            }
+
+            if (!visitedNodesh.Any(x => x.Coord.SequenceEqual(currentNodeh.Coord)))
+            {
+                //Obtiene las coordenadas hijo de una posición ordenadas acorde al orden de expansión
+                List<int[]> childNodes = getNodes(currentNodeh.Coord);
+
+                //Agrega el nodo a la lista de visitados y expandidos
+                expandedNodesh.Add(currentNodeh);
+                visitedNodesh.Add(currentNodeh);
+
+                //Agregar a visita del nodo en el árbol
+                node = tree.retrieveNode(currentNodeh.Coord);
+                node.setData(visitNumber);
+
+                //Verifica los posiciones hijo para seguir con la ejecución del algoritmo
+                foreach (int[] childNode in childNodes)
+                {
+                    MapPosition newNode = new MapPosition(childNode, characterList[playerSelector.SelectedIndex].
+                        MovilityOfCharacter[matrixPosition[childNode[0], childNode[1]].Value]);
+                    newNode.Cost += currentCost;
+
+                    int nodeIndex = expandedNodesh.FindIndex(x => x.Coord.SequenceEqual(childNode));
+                    if(nodeIndex == -1)
+                    {
+                        priorityQueue.Enqueue(newNode);
+                        expandedNodesh.Add(newNode);
+                        node.ChildNodes.Add(new Node(childNode, node, newNode.Cost));
+                    }
+                    else
+                    {
+                        if(!visitedNodesh.Any(x => x.Coord.SequenceEqual(childNode)) && 
+                            newNode.Cost < expandedNodesh[nodeIndex].Cost)
+                        {
+                            expandedNodesh[nodeIndex] = newNode;
+                            priorityQueue.Delete(childNode);
+                            priorityQueue.Enqueue(newNode);
+
+                            Node tempNode = tree.retrieveNode(childNode);
+                            if (tempNode != null)
+                            {
+                                tempNode.Parent.ChildNodes.Remove(tempNode);
+                                node.ChildNodes.Add(new Node(childNode, node, newNode.Cost));
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -783,7 +870,6 @@ namespace IA_project
             if (!currentNode.SequenceEqual(startCoord))
             {
                 movePlayerAlgorithm(currentNode);
-                
             }
             if (currentCoord.SequenceEqual(goalCoord))
             {
@@ -827,6 +913,10 @@ namespace IA_project
             auxStack.Clear();
             expandedNodes.Clear();
             visitedNodes.Clear();
+
+            priorityQueue.Clear();
+            expandedNodesh.Clear();
+            visitedNodesh.Clear();
         }
 
         //Función para reiniciar los controles cuando se alcanzó la meta con un algoritmo
