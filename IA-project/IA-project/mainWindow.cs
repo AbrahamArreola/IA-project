@@ -52,11 +52,11 @@ namespace IA_project
         public Node node;
 
 
-        private Dictionary<int[], double> dictionaryOfEuclidiansPosition = new Dictionary<int[], double>();
-        private Dictionary<int[], double> dictionaryOfEuclidiansCoordenates = new Dictionary<int[], double>();
+        private Dictionary<string, double> dictionaryOfEuclidiansPosition = new Dictionary<string, double>();
+        private Dictionary<string, double> dictionaryOfEuclidiansCoordenates = new Dictionary<string, double>();
 
-        private Dictionary<int[], double> dictionaryOfManhattanPosition = new Dictionary<int[], double>();
-        private Dictionary<int[], double> dictionaryOfManhattanCoordenates = new Dictionary<int[], double>();
+        private Dictionary<string, double> dictionaryOfManhattanPosition = new Dictionary<string, double>();
+        private Dictionary<string, double> dictionaryOfManhattanCoordenates = new Dictionary<string, double>();
 
 
         public mainWindow()
@@ -442,7 +442,6 @@ namespace IA_project
             // make a selection of distance choosen here
             distancesByEuclidianMedition();
            
-
             switch (AlgorithmsCb.SelectedIndex)
             {
                 //Caso 0 = Mover con teclas
@@ -1058,8 +1057,9 @@ namespace IA_project
 
             sumSquares = Math.Sqrt(sumSquares);
 
-          //  listOfDistancesEuclidians.Add(sumSquares);
-            dictionaryOfEuclidiansPosition.Add(coordenates, sumSquares);
+            string key = (coordenates[0] - 1) + "/" + (coordenates[1] - 1);
+
+            dictionaryOfEuclidiansPosition.Add(key, sumSquares);
 
         }
 
@@ -1088,7 +1088,9 @@ namespace IA_project
 
             sumSquares = Math.Sqrt(sumSquares);
 
-            dictionaryOfEuclidiansCoordenates.Add(coordenates, sumSquares);
+            string key = (coordenates[0] - 1) + "/" + (coordenates[1] - 1);
+
+            dictionaryOfEuclidiansCoordenates.Add(key, sumSquares);
         }
 
         private void manhattanDistanceWithCoordenates(int[] coordenates)
@@ -1114,8 +1116,10 @@ namespace IA_project
 
             double sumAbsolutes = xAbs + yAbs;
 
+            string key = (coordenates[0] - 1) + "/" + (coordenates[1] - 1);
 
-            dictionaryOfManhattanCoordenates.Add(coordenates, sumAbsolutes);
+
+            dictionaryOfManhattanCoordenates.Add(key, sumAbsolutes);
         }
 
         private void manhattanDistancewithPosition(Control tileOfMap, int[] coordenates)
@@ -1142,8 +1146,10 @@ namespace IA_project
 
             double sumAbsolutes = xAbs + yAbs;
 
+            string key = (coordenates[0]-1) + "/" + (coordenates[1]-1);
 
-            dictionaryOfManhattanPosition.Add(coordenates, sumAbsolutes);
+
+            dictionaryOfManhattanPosition.Add(key, sumAbsolutes);
 
         }
 
