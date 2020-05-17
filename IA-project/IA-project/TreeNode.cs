@@ -13,6 +13,8 @@ namespace IA_project
         private List<Node> childNodes;
         private int visitNumber;
         private decimal terrainCost;
+        private decimal fCost;
+        private decimal hCost;
 
         //Información que se mostrará en el nodo pintado
         private string stringData;
@@ -44,6 +46,15 @@ namespace IA_project
             setStringData();
         }
 
+        public Node(int[] coord, Node parent, decimal fCost, decimal hCost, decimal terrainCost) : this(coord, parent)
+        {
+            this.fCost = fCost;
+            this.hCost = hCost;
+            this.terrainCost = terrainCost;
+            stringData = String.Format("({0},{1})\n{2}+{3}={4}", (char)(coord[1] + 65),
+                coord[0] + 1, fCost, hCost, terrainCost);
+        }
+
         public void setStringData()
         {
             stringData = String.Format("({0},{1})\n{2}", (char)(coord[1] + 65),
@@ -56,6 +67,13 @@ namespace IA_project
             this.visitNumber = visitNumber;
             stringData = String.Format("{0}\n({1},{2})\n{3}", visitNumber, (char)(coord[1] + 65),
                 coord[0] + 1, terrainCost);
+        }
+
+        public void setDataAstar(int visitNumber)
+        {
+            this.visitNumber = visitNumber;
+            stringData = String.Format("{0}\n({1},{2})\n{3}+{4}={5}", visitNumber, (char)(coord[1] + 65),
+                coord[0] + 1, fCost, hCost, terrainCost);
         }
 
         //Devuelve el tamaño de la cadena de la información del nodo que ocupará el objeto Graphics

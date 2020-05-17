@@ -58,12 +58,9 @@ namespace IA_project
         public Node node;
 
 
-        private Dictionary<int[], double> dictionaryOfEuclidiansPosition = new Dictionary<int[], double>();
-        private Dictionary<int[], double> dictionaryOfEuclidiansCoordenates = new Dictionary<int[], double>();
-
-        private Dictionary<int[], double> dictionaryOfManhattanPosition = new Dictionary<int[], double>();
-        private Dictionary<int[], double> dictionaryOfManhattanCoordenates = new Dictionary<int[], double>();
-
+        private Dictionary<string, decimal> dictionaryOfEuclidiansCoordenates = new Dictionary<string, decimal>();
+        private Dictionary<string, decimal> dictionaryOfManhattanCoordenates = new Dictionary<string, decimal>();
+        private Dictionary<string, decimal> dictionaryofCosts = new Dictionary<string, decimal>();
 
         public mainWindow()
         {
@@ -85,6 +82,8 @@ namespace IA_project
             //Inicializando los comboBox de orden de expasión
             initializeComboBoxes();
             initializeAlgorithmsCb();
+
+            initializeDistancesCb();
 
             //Función para testear el programa
             initializeToPlay();
@@ -432,6 +431,8 @@ namespace IA_project
         //Evento de botón "Jugar" en ventana principal
         private void playBtn_Click(object sender, EventArgs e)
         {
+            string keyString;
+
             playBtn.Enabled = false;
             stopBtn.Enabled = true;
             resetButton.Enabled = false;
@@ -447,6 +448,11 @@ namespace IA_project
 
             // make a selection of distance choosen here
             distancesByEuclidianMedition();
+
+            if (distancesCb.SelectedIndex == 0)
+                dictionaryofCosts = dictionaryOfManhattanCoordenates;
+            else
+                dictionaryofCosts = dictionaryOfEuclidiansCoordenates;
             
             if(AlgorithmsCb.SelectedIndex == 0)
             {
@@ -473,6 +479,25 @@ namespace IA_project
 
                     case 2:
                         currentNodeh = new MapPosition(startCoord, 0);
+                        priorityQueue.Enqueue(currentNodeh);
+                        break;
+
+                    case 3:
+                        keyString = startCoord[0].ToString() + "-" + startCoord[1].ToString();
+                        node = new Node(startCoord, null, dictionaryofCosts[keyString]);
+                        tree = new Tree(node);
+                        currentNodeh = new MapPosition(startCoord, dictionaryofCosts[keyString]);
+                        priorityQueue.Enqueue(currentNodeh);
+                        break;
+
+                    case 4:
+                        keyString = startCoord[0].ToString() + "-" + startCoord[1].ToString();
+                        node = new Node(startCoord, null, 0, dictionaryofCosts[keyString], dictionaryofCosts[keyString]);
+                        tree = new Tree(node);
+
+                        currentNodeh = new MapPosition(startCoord, 0, dictionaryofCosts[keyString], 
+                            dictionaryofCosts[keyString]);
+
                         priorityQueue.Enqueue(currentNodeh);
                         break;
                 }
@@ -711,7 +736,7 @@ namespace IA_project
         //Inicializa el comboBox para seleccionar si jugar con teclas o ejecutar algún algoritmo
         private void initializeAlgorithmsCb()
         {
-            string[] Algorithms = { "Mover con teclas", "Profundidad", "Costo uniforme" };
+            string[] Algorithms = { "Mover con teclas", "Profundidad", "Costo uniforme", "Voraz primero el mejor", "A*"};
 
             AlgorithmsCb.DataSource = Algorithms;
         }
@@ -720,7 +745,7 @@ namespace IA_project
         private void initializeToPlay()
         {
             //Cargar terrenos
-            fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm2.txt";
+            fileRoute = "D:\\AbrahamArreolaPC\\Escritorio\\Dev\\Maps test\\mapAlgorithm3.txt";
             //fileRoute = "D:\\Arturo\\Documents\\Escuela\\8vo semestre\\IA 1\\Mapas\\map2.txt";
 
             Dictionary<int, Terrain> terrains = new Dictionary<int, Terrain>();
@@ -729,7 +754,7 @@ namespace IA_project
             string imagesPath = string.Format("{0}Resources\\terrain_images",
                                 Path.GetFullPath(Path.Combine(absolutePath, @"..\..\")));
 
-            for (int i = 1; i <= 4; i++)
+            for (int i = 1; i <= 3; i++)
             {
                 Terrain terrain = new Terrain
                 {
@@ -759,7 +784,7 @@ namespace IA_project
                     Image = Image.FromFile(paths[i]),
                     MovilityOfCharacter = new Dictionary<int, decimal>
                     {
-                        {1, 2}, {2, 4}, {3, 6}, {4, 8}
+                        {1, 1}, {2, 2}, {3, 3}
                     }
                 };
                 characters.Add(character);
@@ -802,6 +827,14 @@ namespace IA_project
                 case 2:
                     uniformCostSearch();
                     break;
+
+                case 3:
+                    greedyFirstSearch();
+                    break;
+
+                case 4:
+                    ASearchAlgorithm();
+                    break;
             }
         }
 
@@ -809,7 +842,6 @@ namespace IA_project
         private void uniformCostSearch()
         {
             currentNodeh = priorityQueue.Dequeue();
-            decimal currentCost = currentNodeh.Cost;
             if (!currentNodeh.Coord.SequenceEqual(startCoord))
             {
                 movePlayerAlgorithm(currentNodeh.Coord);
@@ -843,7 +875,7 @@ namespace IA_project
                 {
                     MapPosition newNode = new MapPosition(childNode, characterList[playerSelector.SelectedIndex].
                         MovilityOfCharacter[matrixPosition[childNode[0], childNode[1]].Value]);
-                    newNode.Cost += currentCost;
+                    newNode.Cost += currentNodeh.Cost;
 
                     int nodeIndex = expandedNodesh.FindIndex(x => x.Coord.SequenceEqual(childNode));
                     if(nodeIndex == -1)
@@ -866,6 +898,144 @@ namespace IA_project
                             {
                                 tempNode.Parent.ChildNodes.Remove(tempNode);
                                 node.ChildNodes.Add(new Node(childNode, node, newNode.Cost));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //Algoritmo voraz primero el mejor
+        private void greedyFirstSearch()
+        {
+            currentNodeh = priorityQueue.Dequeue();
+            if (!currentNodeh.Coord.SequenceEqual(startCoord))
+            {
+                movePlayerAlgorithm(currentNodeh.Coord);
+            }
+            if (currentCoord.SequenceEqual(goalCoord))
+            {
+                //Agrega última visita al nodo destino
+                node = tree.retrieveNode(currentNodeh.Coord);
+                node.setData(visitNumber);
+
+                //Reinicia lo necesario para finalizar con la ejecución del algoritmo
+                AlgorithmEnds();
+                return;
+            }
+
+            if (!visitedNodesh.Any(x => x.Coord.SequenceEqual(currentNodeh.Coord)))
+            {
+                //Obtiene las coordenadas hijo de una posición ordenadas acorde al orden de expansión
+                List<int[]> childNodes = getNodes(currentNodeh.Coord);
+
+                //Agrega el nodo a la lista de visitados y expandidos
+                expandedNodesh.Add(currentNodeh);
+                visitedNodesh.Add(currentNodeh);
+
+                //Agregar a visita del nodo en el árbol
+                node = tree.retrieveNode(currentNodeh.Coord);
+                node.setData(visitNumber);
+
+                //Verifica los posiciones hijo para seguir con la ejecución del algoritmo
+                foreach (int[] childNode in childNodes)
+                {
+                    string keyString = childNode[0].ToString() + "-" + childNode[1].ToString();
+                    MapPosition newNode = new MapPosition(childNode, dictionaryofCosts[keyString]);
+                    newNode.Cost = dictionaryofCosts[keyString];
+
+                    int nodeIndex = expandedNodesh.FindIndex(x => x.Coord.SequenceEqual(childNode));
+                    if (nodeIndex == -1)
+                    {
+                        priorityQueue.Enqueue(newNode);
+                        expandedNodesh.Add(newNode);
+                        node.ChildNodes.Add(new Node(childNode, node, newNode.Cost));
+                    }
+                    else
+                    {
+                        if (!visitedNodesh.Any(x => x.Coord.SequenceEqual(childNode)) &&
+                            newNode.Cost < expandedNodesh[nodeIndex].Cost)
+                        {
+                            expandedNodesh[nodeIndex] = newNode;
+                            priorityQueue.Delete(childNode);
+                            priorityQueue.Enqueue(newNode);
+
+                            Node tempNode = tree.retrieveNode(childNode);
+                            if (tempNode != null)
+                            {
+                                tempNode.Parent.ChildNodes.Remove(tempNode);
+                                node.ChildNodes.Add(new Node(childNode, node, newNode.Cost));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //Algoritmo A*
+        private void ASearchAlgorithm()
+        {
+            currentNodeh = priorityQueue.Dequeue();
+            if (!currentNodeh.Coord.SequenceEqual(startCoord))
+            {
+                movePlayerAlgorithm(currentNodeh.Coord);
+            }
+            if (currentCoord.SequenceEqual(goalCoord))
+            {
+                //Agrega última visita al nodo destino
+                node = tree.retrieveNode(currentNodeh.Coord);
+                node.setDataAstar(visitNumber);
+
+                //Reinicia lo necesario para finalizar con la ejecución del algoritmo
+                AlgorithmEnds();
+                return;
+            }
+
+            if (!visitedNodesh.Any(x => x.Coord.SequenceEqual(currentNodeh.Coord)))
+            {
+                //Obtiene las coordenadas hijo de una posición ordenadas acorde al orden de expansión
+                List<int[]> childNodes = getNodes(currentNodeh.Coord);
+
+                //Agrega el nodo a la lista de visitados y expandidos
+                expandedNodesh.Add(currentNodeh);
+                visitedNodesh.Add(currentNodeh);
+
+                //Agregar a visita del nodo en el árbol
+                node = tree.retrieveNode(currentNodeh.Coord);
+                node.setDataAstar(visitNumber);
+
+                //Verifica los posiciones hijo para seguir con la ejecución del algoritmo
+                foreach (int[] childNode in childNodes)
+                {
+                    MapPosition newNode = new MapPosition(childNode, characterList[playerSelector.SelectedIndex].
+                        MovilityOfCharacter[matrixPosition[childNode[0], childNode[1]].Value], 0, 0);
+
+                    string keyString = childNode[0].ToString() + "-" + childNode[1].ToString();
+                    newNode.FCost += currentNodeh.FCost;
+                    newNode.HCost = dictionaryofCosts[keyString];
+                    newNode.Cost = newNode.FCost + newNode.HCost;
+
+                    int nodeIndex = expandedNodesh.FindIndex(x => x.Coord.SequenceEqual(childNode));
+                    if (nodeIndex == -1)
+                    {
+                        priorityQueue.Enqueue(newNode);
+                        expandedNodesh.Add(newNode);
+                        node.ChildNodes.Add(new Node(childNode, node, newNode.FCost, newNode.HCost, newNode.Cost));
+                    }
+                    else
+                    {
+                        if (!visitedNodesh.Any(x => x.Coord.SequenceEqual(childNode)) &&
+                            newNode.Cost < expandedNodesh[nodeIndex].Cost)
+                        {
+                            expandedNodesh[nodeIndex] = newNode;
+                            priorityQueue.Delete(childNode);
+                            priorityQueue.Enqueue(newNode);
+
+                            Node tempNode = tree.retrieveNode(childNode);
+                            if (tempNode != null)
+                            {
+                                tempNode.Parent.ChildNodes.Remove(tempNode);
+                                node.ChildNodes.Add(new Node(childNode, node, newNode.FCost, newNode.HCost, newNode.Cost));
                             }
                         }
                     }
@@ -1118,39 +1288,14 @@ namespace IA_project
         #endregion
 
         #region Distances
-
-        private void euclidianDistancewithPosition(Control tileOfMap, int[] coordenates)
+        private void initializeDistancesCb()
         {
-            Control end = map.GetControlFromPosition(goalCoord[1]+1,goalCoord[0]+1);
+            string[] distances = { "Distancia Manhattan", "Distancia Euclideana" };
 
-            var current = tileOfMap.Location;
-            var secondLocation = end.Location;
-
-
-            double x1, x2, y2, y1;
-
-            x1 = current.X;
-            y1 = current.Y;
-
-            x2 = secondLocation.X;
-            y2 = secondLocation.Y;
-
-            double xSquares = (x2 - x1);
-            xSquares = Math.Pow(xSquares, 2);
-
-            double YSquares = (y2 - y1);
-            YSquares = Math.Pow(YSquares, 2);
-
-            double sumSquares = xSquares + YSquares;
-
-            sumSquares = Math.Sqrt(sumSquares);
-
-          //  listOfDistancesEuclidians.Add(sumSquares);
-            dictionaryOfEuclidiansPosition.Add(coordenates, sumSquares);
-
+            distancesCb.DataSource = distances;
         }
 
-        private void euclidianDistanceWithCoordenates(int[] coordenates)
+        private void euclidianDistanceWithCoordenates(int[] coordenates, Dictionary<string, decimal> euclideanDistances)
         {
 
             double x1, x2, y2, y1;
@@ -1174,11 +1319,14 @@ namespace IA_project
             double sumSquares = xSquares + YSquares;
 
             sumSquares = Math.Sqrt(sumSquares);
+            sumSquares = Math.Round(sumSquares, 2);
 
-            dictionaryOfEuclidiansCoordenates.Add(coordenates, sumSquares);
+            string key = (coordenates[0] - 1) + "-" + (coordenates[1] - 1);
+
+            euclideanDistances.Add(key, Convert.ToDecimal(sumSquares));
         }
 
-        private void manhattanDistanceWithCoordenates(int[] coordenates)
+        private void manhattanDistanceWithCoordenates(int[] coordenates, Dictionary<string, decimal> manhattanDistances)
         {
 
             double x1, x2, y2, y1;
@@ -1201,78 +1349,41 @@ namespace IA_project
 
             double sumAbsolutes = xAbs + yAbs;
 
+            string key = (coordenates[0] - 1) + "-" + (coordenates[1] - 1);
 
-            dictionaryOfManhattanCoordenates.Add(coordenates, sumAbsolutes);
-        }
-
-        private void manhattanDistancewithPosition(Control tileOfMap, int[] coordenates)
-        {
-            Control end = map.GetControlFromPosition(goalCoord[1] + 1, goalCoord[0] + 1);
-
-            var current = tileOfMap.Location;
-            var secondLocation = end.Location;
-
-
-            double x1, x2, y2, y1;
-
-            x1 = current.X;
-            y1 = current.Y;
-
-            x2 = secondLocation.X;
-            y2 = secondLocation.Y;
-
-            double xAbs = (x1 - x2);
-            xAbs = Math.Abs(xAbs);
-
-            double yAbs = (y1 - y2);
-            yAbs = Math.Abs(yAbs);
-
-            double sumAbsolutes = xAbs + yAbs;
-
-
-            dictionaryOfManhattanPosition.Add(coordenates, sumAbsolutes);
-
+            manhattanDistances.Add(key, Convert.ToDecimal(sumAbsolutes));
         }
 
         private void distancesByEuclidianMedition()
         {
+            Dictionary<string, decimal> euclideanDistances = new Dictionary<string, decimal>();
+            Dictionary<string, decimal> manhattanDistances = new Dictionary<string, decimal>();
 
             int rows = matrixPosition.GetLength(0);
             int columns = matrixPosition.GetLength(1);
 
             int column, row;
             int[] positions;
-           // int[] positions2;
 
             for (int i = 1; i <= rows; i++)
             {
                 for (int j = 1; j <= columns; j++)
                 {
-               
-                    var tile = map.GetControlFromPosition(j, i);
-
                     column = j;
                     row = i;
 
                     // to avoid alteration of references
                     positions = new int[2] { row, column };
 
-                    // just for test, remove at last
-                    if(j == 4 && i == 6)
-                    {
-                        tile.BackgroundImage = Properties.Resources.pickaxe;
-                    }
+                    // row // column
+                    euclidianDistanceWithCoordenates(positions, euclideanDistances); // the one with coordenates
 
-                    // column // row
-
-                    euclidianDistancewithPosition(tile, positions); // the one with location
-                    euclidianDistanceWithCoordenates(positions); // the one with coordenates
-
-                    manhattanDistanceWithCoordenates(positions);
-                    manhattanDistancewithPosition(tile, positions);
+                    manhattanDistanceWithCoordenates(positions, manhattanDistances);
                 }
             }
 
+            dictionaryOfEuclidiansCoordenates = euclideanDistances;
+            dictionaryOfManhattanCoordenates = manhattanDistances;
         }
 
         #endregion

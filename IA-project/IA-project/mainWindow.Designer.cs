@@ -57,6 +57,8 @@
             this.playerImage = new System.Windows.Forms.PictureBox();
             this.map = new System.Windows.Forms.TableLayoutPanel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.distancesGb = new System.Windows.Forms.GroupBox();
+            this.distancesCb = new System.Windows.Forms.ComboBox();
             this.menuPanel.SuspendLayout();
             this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).BeginInit();
@@ -66,6 +68,7 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.playerGroupB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.playerImage)).BeginInit();
+            this.distancesGb.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuPanel
@@ -182,6 +185,7 @@
             // childFormPanel
             // 
             this.childFormPanel.BackColor = System.Drawing.SystemColors.Control;
+            this.childFormPanel.Controls.Add(this.distancesGb);
             this.childFormPanel.Controls.Add(this.AlgorithmsGb);
             this.childFormPanel.Controls.Add(this.ExpasionOrderGb);
             this.childFormPanel.Controls.Add(this.stopBtn);
@@ -198,9 +202,9 @@
             // 
             this.AlgorithmsGb.Controls.Add(this.AlgorithmsCb);
             this.AlgorithmsGb.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AlgorithmsGb.Location = new System.Drawing.Point(887, 648);
+            this.AlgorithmsGb.Location = new System.Drawing.Point(887, 613);
             this.AlgorithmsGb.Name = "AlgorithmsGb";
-            this.AlgorithmsGb.Size = new System.Drawing.Size(262, 115);
+            this.AlgorithmsGb.Size = new System.Drawing.Size(262, 71);
             this.AlgorithmsGb.TabIndex = 5;
             this.AlgorithmsGb.TabStop = false;
             this.AlgorithmsGb.Text = "Algoritmos";
@@ -209,7 +213,7 @@
             // 
             this.AlgorithmsCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AlgorithmsCb.FormattingEnabled = true;
-            this.AlgorithmsCb.Location = new System.Drawing.Point(14, 51);
+            this.AlgorithmsCb.Location = new System.Drawing.Point(14, 27);
             this.AlgorithmsCb.Name = "AlgorithmsCb";
             this.AlgorithmsCb.Size = new System.Drawing.Size(232, 30);
             this.AlgorithmsCb.TabIndex = 2;
@@ -218,7 +222,7 @@
             // 
             this.ExpasionOrderGb.Controls.Add(this.tableLayoutPanel1);
             this.ExpasionOrderGb.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ExpasionOrderGb.Location = new System.Drawing.Point(887, 431);
+            this.ExpasionOrderGb.Location = new System.Drawing.Point(887, 396);
             this.ExpasionOrderGb.Name = "ExpasionOrderGb";
             this.ExpasionOrderGb.Size = new System.Drawing.Size(262, 202);
             this.ExpasionOrderGb.TabIndex = 4;
@@ -339,7 +343,7 @@
             // stopBtn
             // 
             this.stopBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stopBtn.Location = new System.Drawing.Point(1042, 58);
+            this.stopBtn.Location = new System.Drawing.Point(1042, 31);
             this.stopBtn.Name = "stopBtn";
             this.stopBtn.Size = new System.Drawing.Size(107, 40);
             this.stopBtn.TabIndex = 3;
@@ -350,7 +354,7 @@
             // playBtn
             // 
             this.playBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playBtn.Location = new System.Drawing.Point(887, 58);
+            this.playBtn.Location = new System.Drawing.Point(887, 31);
             this.playBtn.Name = "playBtn";
             this.playBtn.Size = new System.Drawing.Size(112, 40);
             this.playBtn.TabIndex = 2;
@@ -364,7 +368,7 @@
             this.playerGroupB.Controls.Add(this.playerImage);
             this.playerGroupB.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.playerGroupB.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playerGroupB.Location = new System.Drawing.Point(887, 121);
+            this.playerGroupB.Location = new System.Drawing.Point(887, 93);
             this.playerGroupB.Name = "playerGroupB";
             this.playerGroupB.Size = new System.Drawing.Size(262, 287);
             this.playerGroupB.TabIndex = 1;
@@ -414,6 +418,26 @@
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // distancesGb
+            // 
+            this.distancesGb.Controls.Add(this.distancesCb);
+            this.distancesGb.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.distancesGb.Location = new System.Drawing.Point(887, 692);
+            this.distancesGb.Name = "distancesGb";
+            this.distancesGb.Size = new System.Drawing.Size(262, 71);
+            this.distancesGb.TabIndex = 6;
+            this.distancesGb.TabStop = false;
+            this.distancesGb.Text = "Distancias";
+            // 
+            // distancesCb
+            // 
+            this.distancesCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.distancesCb.FormattingEnabled = true;
+            this.distancesCb.Location = new System.Drawing.Point(14, 27);
+            this.distancesCb.Name = "distancesCb";
+            this.distancesCb.Size = new System.Drawing.Size(232, 30);
+            this.distancesCb.TabIndex = 2;
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -438,6 +462,7 @@
             this.tableLayoutPanel1.PerformLayout();
             this.playerGroupB.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.playerImage)).EndInit();
+            this.distancesGb.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -471,6 +496,8 @@
         private System.Windows.Forms.GroupBox AlgorithmsGb;
         public System.Windows.Forms.ComboBox AlgorithmsCb;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.GroupBox distancesGb;
+        public System.Windows.Forms.ComboBox distancesCb;
     }
 }
 

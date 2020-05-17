@@ -10,20 +10,29 @@ namespace IA_project
     {
         private int[] coord;
         private decimal cost;
+        private decimal fCost;
+        private decimal hCost;
 
         public MapPosition(int[] coord)
         {
             this.coord = coord;
         }
 
-        public MapPosition(int[] coord, decimal cost)
+        public MapPosition(int[] coord, decimal cost) : this(coord)
         {
-            this.coord = coord;
             this.cost = cost;
+        }
+
+        public MapPosition(int[] coord, decimal fCost, decimal hCost, decimal cost) : this(coord, cost)
+        {
+            this.fCost = fCost;
+            this.hCost = hCost;
         }
 
         public int[] Coord { get => coord; set => coord = value; }
         public decimal Cost { get => cost; set => cost = value; }
+        public decimal FCost { get => fCost; set => fCost = value; }
+        public decimal HCost { get => hCost; set => hCost = value; }
     }
 
     public class PriorityQueue
