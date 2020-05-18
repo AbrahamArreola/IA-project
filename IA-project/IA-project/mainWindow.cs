@@ -86,7 +86,7 @@ namespace IA_project
             initializeDistancesCb();
 
             //Función para testear el programa
-            initializeToPlay();
+            //initializeToPlay();
         }
 
         #region configPlayer
@@ -442,6 +442,7 @@ namespace IA_project
             playerSelector.Enabled = false;
             ExpasionOrderGb.Enabled = false;
             AlgorithmsGb.Enabled = false;
+            distancesGb.Enabled = false;
             currentCoord = startCoord;
 
             maskMapInit();
@@ -522,6 +523,7 @@ namespace IA_project
             playerSelector.Enabled = true;
             ExpasionOrderGb.Enabled = true;
             AlgorithmsGb.Enabled = true;
+            distancesGb.Enabled = true;
             visitNumber = 1;
 
             MessageBox.Show(this, "Juego detenido", "Gameover",
@@ -1111,6 +1113,7 @@ namespace IA_project
             resetButton.Enabled = true;
             ExpasionOrderGb.Enabled = true;
             AlgorithmsGb.Enabled = true;
+            distancesGb.Enabled = true;
             visitNumber = 1;
             resetMap();
             loadMap();

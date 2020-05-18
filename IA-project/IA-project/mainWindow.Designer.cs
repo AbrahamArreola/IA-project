@@ -38,6 +38,8 @@
             this.resetButton = new System.Windows.Forms.Button();
             this.logoPicBox = new System.Windows.Forms.PictureBox();
             this.childFormPanel = new System.Windows.Forms.Panel();
+            this.distancesGb = new System.Windows.Forms.GroupBox();
+            this.distancesCb = new System.Windows.Forms.ComboBox();
             this.AlgorithmsGb = new System.Windows.Forms.GroupBox();
             this.AlgorithmsCb = new System.Windows.Forms.ComboBox();
             this.ExpasionOrderGb = new System.Windows.Forms.GroupBox();
@@ -57,18 +59,16 @@
             this.playerImage = new System.Windows.Forms.PictureBox();
             this.map = new System.Windows.Forms.TableLayoutPanel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.distancesGb = new System.Windows.Forms.GroupBox();
-            this.distancesCb = new System.Windows.Forms.ComboBox();
             this.menuPanel.SuspendLayout();
             this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).BeginInit();
             this.childFormPanel.SuspendLayout();
+            this.distancesGb.SuspendLayout();
             this.AlgorithmsGb.SuspendLayout();
             this.ExpasionOrderGb.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.playerGroupB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.playerImage)).BeginInit();
-            this.distancesGb.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuPanel
@@ -197,6 +197,26 @@
             this.childFormPanel.Name = "childFormPanel";
             this.childFormPanel.Size = new System.Drawing.Size(1170, 797);
             this.childFormPanel.TabIndex = 1;
+            // 
+            // distancesGb
+            // 
+            this.distancesGb.Controls.Add(this.distancesCb);
+            this.distancesGb.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.distancesGb.Location = new System.Drawing.Point(887, 692);
+            this.distancesGb.Name = "distancesGb";
+            this.distancesGb.Size = new System.Drawing.Size(262, 71);
+            this.distancesGb.TabIndex = 6;
+            this.distancesGb.TabStop = false;
+            this.distancesGb.Text = "Distancias";
+            // 
+            // distancesCb
+            // 
+            this.distancesCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.distancesCb.FormattingEnabled = true;
+            this.distancesCb.Location = new System.Drawing.Point(14, 27);
+            this.distancesCb.Name = "distancesCb";
+            this.distancesCb.Size = new System.Drawing.Size(232, 30);
+            this.distancesCb.TabIndex = 2;
             // 
             // AlgorithmsGb
             // 
@@ -418,26 +438,6 @@
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // distancesGb
-            // 
-            this.distancesGb.Controls.Add(this.distancesCb);
-            this.distancesGb.Font = new System.Drawing.Font("Arial Narrow", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.distancesGb.Location = new System.Drawing.Point(887, 692);
-            this.distancesGb.Name = "distancesGb";
-            this.distancesGb.Size = new System.Drawing.Size(262, 71);
-            this.distancesGb.TabIndex = 6;
-            this.distancesGb.TabStop = false;
-            this.distancesGb.Text = "Distancias";
-            // 
-            // distancesCb
-            // 
-            this.distancesCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.distancesCb.FormattingEnabled = true;
-            this.distancesCb.Location = new System.Drawing.Point(14, 27);
-            this.distancesCb.Name = "distancesCb";
-            this.distancesCb.Size = new System.Drawing.Size(232, 30);
-            this.distancesCb.TabIndex = 2;
-            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -445,7 +445,6 @@
             this.ClientSize = new System.Drawing.Size(1486, 797);
             this.Controls.Add(this.childFormPanel);
             this.Controls.Add(this.menuPanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "mainWindow";
@@ -456,13 +455,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.logoPicBox)).EndInit();
             this.childFormPanel.ResumeLayout(false);
             this.childFormPanel.PerformLayout();
+            this.distancesGb.ResumeLayout(false);
             this.AlgorithmsGb.ResumeLayout(false);
             this.ExpasionOrderGb.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.playerGroupB.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.playerImage)).EndInit();
-            this.distancesGb.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
